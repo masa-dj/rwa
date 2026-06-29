@@ -55,4 +55,9 @@ export class UsersService {
     await this.usersRepository.remove(user);
     return { message: `User ${id} deleted` };
   }
+
+  //Find by email for login purposes
+  async findByEmail(email: string): Promise<User | null> {
+    return this.usersRepository.findOne({ where: { email } });
+  }
 }

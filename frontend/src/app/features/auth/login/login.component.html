@@ -1,0 +1,26 @@
+<div style="max-width: 360px; margin: 100px auto;">
+  <h2>Login</h2>
+
+  <div *ngIf="error" style="color: red; margin-bottom: 12px;">{{ error }}</div>
+
+  <div style="display: flex; flex-direction: column; gap: 12px;">
+    <input
+      type="email"
+      placeholder="Email"
+      [(ngModel)]="email"
+      style="padding: 8px; font-size: 14px;"
+    />
+    <input
+      type="password"
+      placeholder="Password"
+      [(ngModel)]="password"
+      style="padding: 8px; font-size: 14px;"
+    />
+    <button
+      (click)="onSubmit()"
+      style="padding: 10px; cursor: pointer;"
+    >
+      {{ loading ? 'Logging in...' : 'Login' }}
+    </button>
+  </div>
+</div>
