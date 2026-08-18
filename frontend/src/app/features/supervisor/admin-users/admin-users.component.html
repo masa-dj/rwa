@@ -1,0 +1,26 @@
+<h2>Manage Users</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Role</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let u of users">
+      <td>{{ u.firstName }} {{ u.lastName }}</td>
+      <td>{{ u.email }}</td>
+      <td>{{ u.role }}</td>
+      <td>{{ u.status }}</td>
+      <td>
+        <ng-container *ngIf="u.status === 'pending'">
+          <button (click)="approve(u.id)">Approve</button>
+          <button (click)="reject(u.id)">Reject</button>
+        </ng-container>
+      </td>
+    </tr>
+  </tbody>
+</table>

@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/user.module';
+import { PresenceModule } from './presence/presence.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { UsersModule } from './users/user.module';
     }),
     AuthModule,
     UsersModule,
+    PresenceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

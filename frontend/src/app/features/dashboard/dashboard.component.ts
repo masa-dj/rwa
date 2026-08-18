@@ -1,12 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { CommonModule, TitleCasePipe } from '@angular/common';
+import { Router, RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { AuthService } from '../../core/services/auth.service';
+import { ActivityLogComponent } from '../supervisor/activity-log/activity-log.component';
+
+
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, TitleCasePipe],
+  imports: [CommonModule, ActivityLogComponent, RouterLink],
   templateUrl: './dashboard.component.html',
 })
 export class DashboardComponent implements OnInit {
