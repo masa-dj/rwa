@@ -1,0 +1,13 @@
+<div style="max-width: 480px; margin: 100px auto;">
+  @if (user) {
+    <h1>Welcome, {{ user.firstName }} {{ user.lastName }}</h1>
+    <p style="font-size: 18px; margin-top: 8px;">{{ user.role }}</p>
+    <a *ngIf="user.role === 'supervisor'" routerLink="/admin/users">Manage Users</a>
+    <br>
+    <app-activity-log *ngIf="user.role === 'supervisor'" />
+
+    <button (click)="logout()" style="margin-top: 32px; padding: 10px 24px; cursor: pointer;">
+      Logout
+    </button>
+  }
+</div>

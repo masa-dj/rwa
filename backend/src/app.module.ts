@@ -3,12 +3,13 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { PassportModule } from '@nestjs/passport';
+import { AuthModule } from './auth/auth.module';
+import { UsersModule } from './users/user.module';
+import { PresenceModule } from './presence/presence.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    PassportModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DB_HOST,
@@ -17,8 +18,11 @@ import { PassportModule } from '@nestjs/passport';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       autoLoadEntities: true,
-      synchronize: true, 
+      synchronize: true,
     }),
+    AuthModule,
+    UsersModule,
+    PresenceModule,
   ],
   controllers: [AppController],
   providers: [AppService],

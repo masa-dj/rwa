@@ -1,12 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { PresenceService } from './core/services/presence.service';
 
 @Component({
   selector: 'app-root',
+  standalone: true,
   imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+  template: `<router-outlet />`,
 })
-export class AppComponent {
-  title = 'frontend';
+export class AppComponent implements OnInit {
+  constructor(private presenceService: PresenceService) {}
+
+  ngOnInit() {
+    const token = localStorage.getItem('token');
+    if (token) {
+      this.presenceService.connect(token);
+    }
+  }
 }

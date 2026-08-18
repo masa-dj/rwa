@@ -1,0 +1,18 @@
+<div *ngIf="!submitted">
+  <h2>Register</h2>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <input formControlName="firstName" placeholder="First name" />
+    <input formControlName="lastName" placeholder="Last name" />
+    <input formControlName="email" placeholder="Email" type="email" />
+    <input formControlName="password" placeholder="Password" type="password" />
+    <button type="submit" [disabled]="form.invalid">Register</button>
+  </form>
+  <p *ngIf="errorMessage" style="color: red">{{ errorMessage }}</p>
+  <a routerLink="/login">Already have an account? Login</a>
+</div>
+
+<div *ngIf="submitted">
+  <h2>Registration submitted</h2>
+  <p>Your account is pending supervisor approval. You can log in now, but you'll see a pending screen until you're approved.</p>
+  <a routerLink="/login">Go to login</a>
+</div>
