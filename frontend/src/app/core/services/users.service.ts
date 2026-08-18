@@ -15,4 +15,8 @@ export class UsersService {
   updateStatus(id: string, status: 'approved' | 'rejected') {
     return this.http.patch(`${this.api}/users/${id}/status`, { status });
   }
+
+  delete(id: string) {
+    return this.http.delete<AppUser[]>(`${this.api}/users/${id}`);
+  }
 }

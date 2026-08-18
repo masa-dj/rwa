@@ -1,1 +1,30 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap');
+
+:root {
+  --color-ink: #003459;
+  --color-paper: #faf9f6;
+  --color-paper-alt: #f4f2ec;
+  --color-slate: #6B7280;
+  --color-border: #E2DDD3;
+  --color-accent: #37AEBE;
+  --color-text: #1F2328;
+  --color-text-inverse: #faf9f6;
+
+  --color-green : #B6D094;
+  --color-red: #e87461;
+
+  --font-display: 'Montserrat', sans-serif;
+  --font-body: 'Montserrat', sans-serif;
+  --font-mono: 'Montserrat', sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--color-paper);
+  color: var(--color-text);
+}

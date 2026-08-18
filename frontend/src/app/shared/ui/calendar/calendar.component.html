@@ -1,0 +1,20 @@
+<div class="calendar">
+  <div class="calendar__header">
+
+    <div class="calendar__nav">
+      <app-button variant="ghost" (clicked)="prevMonth()">&larr;</app-button>
+      <span class="calendar__month">{{ monthLabel }}</span>
+      <app-button variant="ghost" (clicked)="nextMonth()">&rarr;</app-button>
+    </div>
+  </div>
+
+  <div class="calendar__grid calendar__grid--labels">
+    <span *ngFor="let d of weekdayLabels">{{ d }}</span>
+  </div>
+
+  <div class="calendar__grid" *ngFor="let week of weeks">
+    <span *ngFor="let day of week" class="calendar__day" [class.is-muted]="!day.isCurrentMonth" [class.is-today]="day.isToday">
+      {{ day.date }}
+    </span>
+  </div>
+</div>

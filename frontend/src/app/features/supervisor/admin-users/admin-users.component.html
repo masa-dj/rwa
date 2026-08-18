@@ -1,26 +1,49 @@
-<h2>Manage Users</h2>
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Email</th>
-      <th>Role</th>
-      <th>Status</th>
-      <th>Actions</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let u of users">
-      <td>{{ u.firstName }} {{ u.lastName }}</td>
-      <td>{{ u.email }}</td>
-      <td>{{ u.role }}</td>
-      <td>{{ u.status }}</td>
-      <td>
-        <ng-container *ngIf="u.status === 'pending'">
-          <button (click)="approve(u.id)">Approve</button>
-          <button (click)="reject(u.id)">Reject</button>
-        </ng-container>
-      </td>
-    </tr>
-  </tbody>
-</table>
+<div class="layout">
+  <app-sidebar></app-sidebar>
+
+  <main class="layout__content">
+    <h1 class="layout__title">Users</h1>
+    <p class="layout__subtitle">Approve or reject accounts</p>
+
+    <div class="table-card">
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let u of users">
+            <td>{{ u.firstName }} {{ u.lastName }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.role }}</td>
+            <td>
+              <span class="status-badge" [class]="'status-badge--' + u.status">{{ u.status }}</span>
+            </td>
+            <td class="actions-cell">
+              <ng-container *ngIf="u.status === 'pending'">
+                <app-button variant="ghost" (clicked)="approve(u.id)">Approve</app-button>
+                <app-button variant="danger" (clicked)="reject(u.id)">Reject</app-button>
+              </ng-container>
+
+              <div class="menu" *ngIf="u.status !== 'pending' && u.role === 'student'">
+                <button class="menu__trigger" (click)="toggleMenu(u.id)" aria-label="Open actions">⋯</button>
+
+                <div class="menu__dropdown" *ngIf="openMenuId === u.id">
+                  <button class="menu__item" (click)="update(u.id)">Update</button>
+                  <button class="menu__item menu__item--danger" (click)="remove(u.id)">Delete</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="empty-state" *ngIf="users.length === 0">No users yet.</p>
+    </div>
+  </main>
+</div>
