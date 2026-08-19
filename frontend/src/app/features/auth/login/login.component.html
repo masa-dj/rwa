@@ -1,27 +1,53 @@
-<div style="max-width: 360px; margin: 100px auto;">
-  <h2>Login</h2>
+<div class="login-wrapper">
+  <div class="login-card">
+    <div class="login-card__header">
+      <h2 class="login-card__title">Login</h2>
+    </div>
 
-  <div *ngIf="error" style="color: red; margin-bottom: 12px;">{{ error }}</div>
+    <form (ngSubmit)="onSubmit()" class="login-card__form">
+      <div class="form-group">
+        <label for="email" class="form-label">Email</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="name@email.com"
+          [(ngModel)]="email"
+          name="email"
+          class="form-input"
+          required
+        />
+      </div>
 
-  <div style="display: flex; flex-direction: column; gap: 12px;">
-    <input
-      type="email"
-      placeholder="Email"
-      [(ngModel)]="email"
-      style="padding: 8px; font-size: 14px;"
-    />
-    <input
-      type="password"
-      placeholder="Password"
-      [(ngModel)]="password"
-      style="padding: 8px; font-size: 14px;"
-    />
-    <button
-      (click)="onSubmit()"
-      style="padding: 10px; cursor: pointer;"
-    >
-      {{ loading ? 'Logging in...' : 'Login' }}
-    </button>
+      <div class="form-group">
+        <label for="password" class="form-label">Password</label>
+        <input
+          id="password"
+          type="password"
+          placeholder="••••••••"
+          [(ngModel)]="password"
+          name="password"
+          class="form-input"
+          required
+        />
+      </div>
+
+      <div *ngIf="error" class="login-card__error">
+        {{ error }}
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="loading"
+        class="login-card__button"
+      >
+        <span *ngIf="!loading">Sign In</span>
+        <span *ngIf="loading">Signing in...</span>
+      </button>
+    </form>
+
+    <div class="login-card__footer">
+      <span>Don't have an account?</span>
+      <a routerLink="/register" class="login-card__link">Register</a>
+    </div>
   </div>
 </div>
-<a routerLink="/register">Dont have an account? Register</a>

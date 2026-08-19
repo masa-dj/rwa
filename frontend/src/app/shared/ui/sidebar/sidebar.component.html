@@ -1,0 +1,36 @@
+<aside class="sidebar">
+  <div class="sidebar__brand">
+    <span class="sidebar__name">{{ userName }}</span>
+  </div>
+
+  <nav class="sidebar__nav">
+    <a
+      *ngFor="let item of navItems"
+      [routerLink]="item.route"
+      routerLinkActive="is-active"
+      class="sidebar__link"
+    >
+      <ng-container *ngComponentOutlet="item.icon"></ng-container>
+      <span>{{ item.label }}</span>
+    </a>
+  </nav>
+
+  <div class="sidebar__bottom">
+    <a
+      *ngIf="isSupervisor"
+      [routerLink]="usersNavItem.route"
+      routerLinkActive="is-active"
+      class="sidebar__link"
+    >
+      <ng-container *ngComponentOutlet="usersNavItem.icon"></ng-container>
+      <span>{{ usersNavItem.label }}</span>
+    </a>
+
+    <div class="sidebar__footer">
+      <app-button variant="ghost-inverse" (clicked)="logout()">
+        <ng-container *ngComponentOutlet="LogOutIcon"></ng-container>
+        <span>Logout</span>
+      </app-button>
+    </div>
+  </div>
+</aside>
