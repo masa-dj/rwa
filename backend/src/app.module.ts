@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/user.module';
 import { PresenceModule } from './presence/presence.module';
+import { SessionModule } from './sessions/session.module';
+import { ExamModule } from './exams/exam.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { PresenceModule } from './presence/presence.module';
     AuthModule,
     UsersModule,
     PresenceModule,
+    SessionModule,
+    ExamModule,
   ],
   controllers: [AppController],
   providers: [AppService],
