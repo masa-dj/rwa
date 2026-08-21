@@ -56,4 +56,9 @@ export class ExamController {
     abort(@Param('id') id: string) {
         return this.examService.abort(id);
     }
+
+    @Patch(':id/open-room')
+    openRoom(@Request() req: any, @Param('id') id: string) {
+        return this.examService.openRoom(id, req.user.id);
+    }
 }

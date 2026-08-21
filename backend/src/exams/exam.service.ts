@@ -34,7 +34,7 @@ export class ExamService {
         if (exam.studentId !== studentId) {
             throw new BadRequestException('This exam is not assigned to you');
         }
-        if (exam.status !== ExamStatus.SCHEDULED) {
+        if (exam.status !== ExamStatus.READY_CHECK) {
             throw new BadRequestException(`Exam is already ${exam.status}`);
         }
 
@@ -115,6 +115,39 @@ export class ExamService {
         await this.sessionService.abort(exam.sessionId);
 
         exam.status = ExamStatus.ABORTED;
+        return this.examRepository.save(exam);
+    }
+
+    async openRoom(examId: string, supervisorId: string): Promise<Exam> {
+        const exam = await this.findById(examId);
+        if (exam.supervisorId !== supervisorId) {
+            throw new BadRequestException('This exam is not assigned to you');
+        }
+        if (exam.status !== ExamStatus.SCHEDULED) {
+            throw new BadRequestException(`Exam is already ${exam.status}`);
+        }
+
+        const earliest = new Date(exam.scheduledAt.getTime() - 15 * 60 * 1000);
+        if (new Date() < earliest) {
+            throw new BadRequestException('Too early to open the exam room');
+        }
+
+        exam.status = ExamStatus.READY_CHECK;
+        exam.roomOpenedAt = new Date();
+        return this.examRepository.save(exam);
+    }
+
+    async finish(examId: string): Promise<Exam> {
+        const exam = await this.findById(examId);
+        if (exam.status !== ExamStatus.IN_PROGRESS) {
+            throw new BadRequestException(`Exam is already ${exam.status}`);
+        }
+        if (!exam.sessionId) {
+            throw new BadRequestException('Exam has no active session to finish');
+        }
+
+        await this.sessionService.finish(exam.sessionId);
+        exam.status = ExamStatus.COMPLETED;
         return this.examRepository.save(exam);
     }
 }

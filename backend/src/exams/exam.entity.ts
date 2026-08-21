@@ -12,6 +12,7 @@ import { Session, ExerciseType } from '../sessions/session.entity';
 
 export enum ExamStatus {
     SCHEDULED = 'scheduled',
+    READY_CHECK = 'ready_check',
     IN_PROGRESS = 'in_progress',
     COMPLETED = 'completed',
     ABORTED = 'aborted',
@@ -52,6 +53,9 @@ export class Exam {
 
     @Column({ nullable: true })
     sessionId!: string | null;
+
+    @Column({ type: 'timestamp', nullable: true })
+    roomOpenedAt!: Date | null;
 
     @CreateDateColumn()
     createdAt!: Date;

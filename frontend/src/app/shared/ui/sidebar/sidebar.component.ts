@@ -25,7 +25,7 @@ interface NavItem {
 const SUPERVISOR_NAV: NavItem[] = [
   { label: 'Dashboard', route: '/dashboard',icon: LucideLayoutDashboard },
   { label: 'Students', route: '/dashboard', icon: LucideUsers }, // /students
-  { label: 'Exams', route: '/dashboard', icon: LucideClipboardList}, // /exams
+  { label: 'Exams', route: '/exams', icon: LucideClipboardList},
   { label: 'Reports', route: '/dashboard', icon: LucideLibrary }, // /reports
   { label: 'News', route: '/news', icon: LucideNewspaper },
 ];
@@ -33,7 +33,7 @@ const SUPERVISOR_NAV: NavItem[] = [
 const STUDENT_NAV: NavItem[] = [
   { label: 'Dashboard', route: '/dashboard', icon: LucideLayoutDashboard  },
   { label: 'Practice', route: '/dashboard', icon: LucideNotebookPen }, // /practice
-  { label: 'Exams', route: '/dashboard', icon: LucideClipboardList }, // /exams
+  { label: 'Exams', route: '/exams', icon: LucideClipboardList },
   { label: 'Reports', route: '/dashboard', icon: LucideLibrary },  // /reports
   { label: 'News', route: '/news', icon: LucideNewspaper },
 ];

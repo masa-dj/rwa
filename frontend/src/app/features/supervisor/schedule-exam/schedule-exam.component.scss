@@ -1,0 +1,71 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.layout__content {
+  flex: 1;
+  padding: 48px 56px;
+  max-width: 560px;
+}
+
+.layout__title {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.layout__subtitle {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-slate);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 4px 0 32px;
+}
+
+.form-card, .success-card {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+}
+
+.field {
+  display: block;
+  margin-bottom: 16px;
+}
+
+.field__label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 6px;
+}
+
+.field__input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--color-text);
+  background: #fff;
+}
+
+.error {
+  color: #B3462C;
+  font-size: 13px;
+  margin-top: 12px;
+}
+
+.success-card p {
+  margin: 0 0 16px;
+  font-size: 14px;
+  color: var(--color-text);
+}

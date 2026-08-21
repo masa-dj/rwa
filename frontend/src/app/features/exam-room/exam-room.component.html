@@ -1,0 +1,41 @@
+<div class="layout">
+  <app-sidebar></app-sidebar>
+
+  <main class="layout__content">
+    <h1 class="layout__title">Live Exam Room</h1>
+
+    <div class="room-card" *ngIf="status === 'connecting'">
+      <p>Connecting…</p>
+    </div>
+
+    <div class="room-card" *ngIf="status === 'waiting'">
+      <div class="ready-row">
+        <span class="ready-row__label">Supervisor</span>
+        <span class="ready-badge" [class.is-ready]="supervisorReady">{{ supervisorReady ? 'Ready' : 'Waiting' }}</span>
+      </div>
+      <div class="ready-row">
+        <span class="ready-row__label">Student</span>
+        <span class="ready-badge" [class.is-ready]="studentReady">{{ studentReady ? 'Ready' : 'Waiting' }}</span>
+      </div>
+      <app-button variant="primary" [disabled]="myReady" (clicked)="markReady()">
+        {{ myReady ? 'Waiting for the other side…' : 'Ready' }}
+      </app-button>
+    </div>
+
+    <div class="room-card" *ngIf="status === 'in_progress'">
+      <p class="room-card__status">Exam in progress</p>
+      <app-button *ngIf="isSupervisor" variant="danger" (clicked)="abort()">Abort</app-button>
+      <app-button *ngIf="!isSupervisor" variant="primary" (clicked)="finish()">Finish</app-button>
+    </div>
+
+    <div class="room-card" *ngIf="status === 'ended'">
+      <p>{{ endedMessage }}</p>
+      <app-button variant="secondary" (clicked)="backToExams()">Back to Exams</app-button>
+    </div>
+
+    <div class="room-card" *ngIf="status === 'error'">
+      <p class="error">{{ errorMessage }}</p>
+      <app-button variant="secondary" (clicked)="backToExams()">Back to Exams</app-button>
+    </div>
+  </main>
+</div>

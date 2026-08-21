@@ -61,6 +61,16 @@ export class SessionService {
         return this.sessionRepository.save(session);
     }
 
+    async finish(id: string): Promise<Session> {
+        const session = await this.findById(id);
+        if (session.status !== SessionStatus.IN_PROGRESS) {
+            throw new BadRequestException(`Session is already ${session.status}`);
+        }
+        session.status = SessionStatus.COMPLETED;
+        session.endTime = new Date();
+        return this.sessionRepository.save(session);
+    }
+
     async abort(id: string): Promise<Session> {
         const session = await this.findById(id);
         if (session.status !== SessionStatus.IN_PROGRESS) {

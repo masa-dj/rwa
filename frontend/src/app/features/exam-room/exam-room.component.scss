@@ -1,0 +1,26 @@
+.layout { display: flex; min-height: 100vh; }
+.layout__content { flex: 1; padding: 48px 56px; max-width: 480px; }
+.layout__title { font-family: var(--font-display); font-size: 28px; font-weight: 600; margin: 0 0 24px; }
+.room-card {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.ready-row { display: flex; justify-content: space-between; align-items: center; }
+.ready-row__label { font-size: 14px; color: var(--color-text); }
+.ready-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--color-paper-alt);
+  color: var(--color-slate);
+  &.is-ready { background: var(--color-moss-soft); color: #2b6b46; }
+}
+.room-card__status { font-family: var(--font-mono); font-size: 13px; text-transform: uppercase; color: var(--color-moss); }
+.error { color: #B3462C; }
