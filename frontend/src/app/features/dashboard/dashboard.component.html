@@ -10,7 +10,7 @@
       </section>
 
       <aside class="layout__aside">
-        <app-calendar></app-calendar>
+        <app-calendar [exams]="exams"></app-calendar>
         <app-activity-log *ngIf="user.role === 'supervisor'"></app-activity-log>
       </aside>
     </div>
