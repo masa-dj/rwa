@@ -77,6 +77,7 @@ export class UsersService {
     return users.map((u) => ({
       id: u.id,
       name: `${u.firstName} ${u.lastName}`,
+      email: u.email,
       status: onlineUserIds.includes(u.id) ? 'active' : 'offline',
       lastSeenAt: u.lastSeenAt,
     }));

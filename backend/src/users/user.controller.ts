@@ -1,16 +1,27 @@
-import { Controller, Get, Patch, Put, Delete, Param, Body, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Patch, Put, Delete, Param, Body, UseGuards } from '@nestjs/common';
 import { UsersService } from './user.service';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UpdateUserStatusDto } from './dto/update-user-status.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { UserRole } from './user.entity';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('users')
+@ApiBearerAuth()
 @Controller('users')
 @UseGuards(JwtAuthGuard)
 export class UsersController {
   constructor(private usersService: UsersService) {}
+
+  @Post()
+  @UseGuards(RolesGuard)
+  @Roles(UserRole.SUPERVISOR)
+  create(@Body() dto: CreateUserDto) {
+    return this.usersService.create(dto);
+  }
 
   @Get()
   @UseGuards(RolesGuard)
@@ -20,7 +31,9 @@ export class UsersController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) { return this.usersService.findById(id); }
+  findOne(@Param('id') id: string) {
+    return this.usersService.findById(id);
+  }
 
   @Patch(':id/status')
   @UseGuards(RolesGuard)
@@ -35,5 +48,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) { return this.usersService.remove(id); }
+  remove(@Param('id') id: string) {
+    return this.usersService.remove(id);
+  }
 }

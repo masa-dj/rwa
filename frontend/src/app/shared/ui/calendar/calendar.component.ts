@@ -1,11 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../button/button.component';
+import { Exam } from '../../../core/services/exam.service';
 
 interface CalendarDay {
   date: number;
   isCurrentMonth: boolean;
   isToday: boolean;
+  fullDate: Date;
+  exams: Exam[];
 }
 
 @Component({
@@ -15,12 +18,24 @@ interface CalendarDay {
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss'],
 })
-export class CalendarComponent implements OnInit {
+export class CalendarComponent implements OnInit, OnChanges {
+  @Input() exams: Exam[] = [];
+
   viewDate = new Date();
   weeks: CalendarDay[][] = [];
   weekdayLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
+  exerciseLabels: Record<string, string> = {
+    steady_path: 'Steady Path',
+    timed_suture: 'Timed Suture',
+    vessel_cauterization: 'Vessel Cauterization',
+  };
+
   ngOnInit() {
+    this.buildCalendar();
+  }
+
+  ngOnChanges() {
     this.buildCalendar();
   }
 
@@ -38,6 +53,10 @@ export class CalendarComponent implements OnInit {
     this.buildCalendar();
   }
 
+  formatTime(scheduledAt: string): string {
+    return new Date(scheduledAt).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+  }
+
   private buildCalendar() {
     const year = this.viewDate.getFullYear();
     const month = this.viewDate.getMonth();
@@ -53,6 +72,8 @@ export class CalendarComponent implements OnInit {
         date: d.getDate(),
         isCurrentMonth: d.getMonth() === month,
         isToday: d.toDateString() === today.toDateString(),
+        fullDate: d,
+        exams: this.exams.filter((e) => new Date(e.scheduledAt).toDateString() === d.toDateString()),
       });
     }
 

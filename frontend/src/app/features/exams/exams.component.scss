@@ -1,0 +1,88 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.layout__content {
+  flex: 1;
+  padding: 48px 56px;
+  max-width: 1000px;
+}
+
+.layout__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.layout__title {
+  font-family: var(--font-display);
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.layout__subtitle {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--color-slate);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 4px 0 0;
+}
+
+.table-card {
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 8px 24px;
+}
+
+.exams-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-body);
+
+  th {
+    text-align: left;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-slate);
+    padding: 16px 12px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  td {
+    padding: 14px 12px;
+    font-size: 14px;
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-paper-alt);
+  }
+
+  tr:last-child td { border-bottom: none; }
+}
+
+.status-badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 3px 8px;
+  border-radius: var(--radius-sm);
+
+  &--scheduled { background: var(--color-accent-soft); color: #8a5a1f; }
+  &--in_progress { background: var(--color-moss-soft); color: #2b6b46; }
+  &--completed { background: var(--color-paper-alt); color: var(--color-slate); }
+  &--aborted, &--missed { background: #FBEAE4; color: #B3462C; }
+}
+
+.empty-state {
+  padding: 32px 0;
+  text-align: center;
+  color: var(--color-slate);
+  font-size: 14px;
+}

@@ -1,0 +1,42 @@
+<div class="layout">
+  <app-sidebar></app-sidebar>
+
+  <main class="layout__content" *ngIf="!loading">
+    <div class="layout__header">
+      <div>
+        <h1 class="layout__title">Practice</h1>
+        <p class="layout__subtitle">Private, self-guided exercises</p>
+      </div>
+    </div>
+
+    <div class="start-card">
+      <select [(ngModel)]="selectedExercise" class="start-card__select">
+        <option *ngFor="let e of exerciseTypes" [value]="e.value">{{ e.label }}</option>
+      </select>
+      <app-button variant="primary" (clicked)="start()">Start Practice</app-button>
+    </div>
+
+    <div class="table-card">
+      <table class="sessions-table" *ngIf="sessions.length > 0">
+        <thead>
+          <tr>
+            <th>Exercise</th>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of sessions">
+            <td>{{ exerciseLabel(s.exerciseType) }}</td>
+            <td>{{ s.startTime | date: 'MMM d, y · h:mm a' }}</td>
+            <td><span class="status-badge" [class]="'status-badge--' + s.status">{{ s.status }}</span></td>
+            <td>{{ s.score ?? '—' }}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p class="empty-state" *ngIf="sessions.length === 0">No practice attempts yet.</p>
+    </div>
+  </main>
+</div>

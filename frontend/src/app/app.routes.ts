@@ -9,6 +9,12 @@ import { approvedGuard } from './core/guards/approved.guard';
 import { supervisorGuard } from './core/guards/supervisor.guard';
 import { redirectIfLoggedGuard } from './core/guards/redirect-if-logged.guard';
 import { NewsComponent } from './features/news/news.component';
+import { ExamsComponent } from './features/exams/exams.component';
+import { ScheduleExamComponent } from './features/supervisor/schedule-exam/schedule-exam.component';
+import { ExamRoomComponent } from './features/exam-room/exam-room.component';
+import { PracticeComponent } from './features/student/practice/practice.component';
+import { PracticeRoomComponent } from './features/student/practice-room/practice-room.component';
+
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [redirectIfLoggedGuard]  },
@@ -17,5 +23,10 @@ export const routes: Routes = [
   { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard, approvedGuard] },
   { path: 'admin/users', component: AdminUsersComponent, canActivate: [authGuard, approvedGuard, supervisorGuard] },
   { path: 'news', component: NewsComponent, canActivate: [authGuard, approvedGuard] },
+  { path: 'exams', component: ExamsComponent, canActivate: [authGuard, approvedGuard] },
+  { path: 'exams/schedule', component: ScheduleExamComponent, canActivate: [authGuard, approvedGuard, supervisorGuard] },
+  { path: 'exams/:id/room', component: ExamRoomComponent, canActivate: [authGuard, approvedGuard] },
+  { path: 'practice', component: PracticeComponent, canActivate: [authGuard, approvedGuard] },
+{ path: 'practice/:id', component: PracticeRoomComponent, canActivate: [authGuard, approvedGuard] },
   { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];

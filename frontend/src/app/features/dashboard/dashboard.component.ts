@@ -5,6 +5,7 @@ import { AuthService } from '../../core/services/auth.service';
 import { ActivityLogComponent } from '../supervisor/activity-log/activity-log.component';
 import { SidebarComponent } from '../../shared/ui/sidebar/sidebar.component';
 import { CalendarComponent } from '../../shared/ui/calendar/calendar.component';
+import { ExamService, Exam } from '../../core/services/exam.service';
 
 
 
@@ -17,12 +18,18 @@ import { CalendarComponent } from '../../shared/ui/calendar/calendar.component';
 })
 export class DashboardComponent implements OnInit {
   user: { id: string; email: string; firstName: string; lastName: string; role: string } | null = null;
-
-  constructor(private authService: AuthService, private router: Router) {}
+  exams: Exam[] = [];
+  constructor(private authService: AuthService, private router: Router, private examService: ExamService,) {}
 
   ngOnInit() {
     const u = this.authService.getUser();
-    if (!u) this.router.navigate(['/login']);
-    else this.user = u;
+    if (!u) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    this.user = u;
+
+    const source = u.role === 'supervisor' ? this.examService.getAll() : this.examService.getMine();
+    source.subscribe((exams) => (this.exams = exams));
   }
 }
