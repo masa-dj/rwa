@@ -16,9 +16,8 @@ import {
   interval,
   merge,
   timer,
-  zip,
 } from 'rxjs';
-import { map, share, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { map, share, startWith, switchMap, takeUntil,withLatestFrom, auditTime } from 'rxjs/operators';
 
 interface Target {
   id: string;
@@ -40,6 +39,13 @@ export interface CauterizationResult {
   missed: number;
 }
 
+export interface TelemetrySnapshot {
+  targets: { id: string; x: number; y: number; radius: number; holdProgress: number }[];
+  sealedCount: number;
+  timeRemaining: number;
+  pointer: { x: number; y: number } | null;
+}
+
 const CANVAS_WIDTH = 560;
 const CANVAS_HEIGHT = 360;
 const TARGET_RADIUS = 24;
@@ -59,7 +65,7 @@ const MAX_TARGETS = 5;
 export class VesselCauterizationComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() durationMs = EXAM_DURATION_MS;
   @Output() finished = new EventEmitter<CauterizationResult>();
-
+  @Output() telemetry = new EventEmitter<TelemetrySnapshot>();
   @ViewChild('canvas', { static: true }) canvasRef!: ElementRef<HTMLDivElement>;
 
   targets: Target[] = [];
@@ -71,6 +77,7 @@ export class VesselCauterizationComponent implements OnInit, AfterViewInit, OnDe
   private lastPointerPos: Point = { x: -1000, y: -1000 };
   private activeTargetId: string | null = null;
   private holdProgressMs = 0;
+  private hasPointerEntered = false;
 
   ngOnInit() {
     //countdown, change later if one min doesnt make sense
@@ -101,7 +108,10 @@ export class VesselCauterizationComponent implements OnInit, AfterViewInit, OnDe
       map((e) => this.relativePos(e)),
       share(),
     );
-    pointerMove$.pipe(takeUntil(this.destroy$)).subscribe((p) => (this.lastPointerPos = p));
+    pointerMove$.pipe(takeUntil(this.destroy$)).subscribe((p) => {
+      this.lastPointerPos = p;
+      this.hasPointerEntered = true;
+    });
 
     const pointerDown$ = fromEvent<PointerEvent>(el, 'pointerdown');
 
@@ -115,7 +125,8 @@ export class VesselCauterizationComponent implements OnInit, AfterViewInit, OnDe
     pointerDown$
       .pipe(
         switchMap(() =>
-          zip(pulse$, pointerMove$.pipe(startWith(this.lastPointerPos))).pipe(
+          pulse$.pipe(
+            withLatestFrom(pointerMove$.pipe(startWith(this.lastPointerPos))),
             takeUntil(release$),
           ),
         ),
@@ -124,6 +135,11 @@ export class VesselCauterizationComponent implements OnInit, AfterViewInit, OnDe
       .subscribe(([, pos]) => this.onHoldTick(pos));
 
     release$.pipe(takeUntil(this.destroy$)).subscribe(() => this.resetHold());
+    fromEvent(el, 'pointerleave').pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.hasPointerEntered = false;
+    });
+    pulse$.pipe(auditTime(50), takeUntil(this.destroy$)).subscribe(() => this.emitTelemetry());
+
   }
 
   private relativePos(e: PointerEvent): Point {
@@ -213,13 +229,22 @@ export class VesselCauterizationComponent implements OnInit, AfterViewInit, OnDe
     this.destroy$.complete();
   }
 
-  ngOnDestroy() {
-    this.destroy$.next();
-    this.destroy$.complete();
-  }
-
   formatTime(ms: number): string {
     const seconds = Math.ceil(ms / 1000);
     return `0:${seconds.toString().padStart(2, '0')}`;
+  }
+
+  private emitTelemetry() {
+    this.telemetry.emit({
+      targets: this.targets.map((t) => ({ id: t.id, x: t.x, y: t.y, radius: t.radius, holdProgress: t.holdProgress })),
+      sealedCount: this.sealedCount,
+      timeRemaining: this.timeRemaining,
+      pointer: this.hasPointerEntered ? this.lastPointerPos : null,
+    });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

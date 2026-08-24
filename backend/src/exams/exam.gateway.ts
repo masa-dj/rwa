@@ -85,19 +85,30 @@ export class ExamGateway {
         } catch (err: any) {
             client.emit('exam:error', { message: err.message });
         }
-        }
+    }
 
-        @SubscribeMessage('exam:finish')
-        async handleFinish(@ConnectedSocket() client: Socket) {
+    @SubscribeMessage('exam:finish')
+    async handleFinish(
+        @ConnectedSocket() client: Socket,
+        @MessageBody() data: { precisionScore: number; tremorIndex: number; score: number },
+    ) {
         const { examId, role } = client.data;
         if (role !== 'student') return;
-
         try {
-            const exam = await this.examService.finish(examId);
+            const exam = await this.examService.complete(examId, data);
             this.examRoomService.clear(examId);
             this.server.to(`exam:${examId}`).emit('exam:finished', exam);
         } catch (err: any) {
             client.emit('exam:error', { message: err.message });
         }
+    }
+
+    @SubscribeMessage('exam:telemetry')
+    handleTelemetry(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
+        const { examId, role } = client.data;
+        if (role !== 'student' || !examId) {
+            return;
+        }
+        client.to(`exam:${examId}`).emit('exam:telemetry', data);
     }
 }
