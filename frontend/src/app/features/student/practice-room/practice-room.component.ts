@@ -4,11 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SessionService, Session } from '../../../core/services/session.service';
 import { SidebarComponent } from '../../../shared/ui/sidebar/sidebar.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
+import { VesselCauterizationComponent, CauterizationResult } from '../../exercises/vessel-cauterization/vessel-cauterization.component';
 
 @Component({
   selector: 'app-practice-room',
   standalone: true,
-  imports: [CommonModule, SidebarComponent, ButtonComponent],
+  imports: [CommonModule, SidebarComponent, ButtonComponent, VesselCauterizationComponent],
   templateUrl: './practice-room.component.html',
   styleUrls: ['./practice-room.component.scss'],
 })
@@ -35,6 +36,25 @@ export class PracticeRoomComponent implements OnInit {
     this.sessionService.getMine().subscribe((sessions) => {
       this.session = sessions.find((s) => s.id === id) ?? null;
       this.loading = false;
+    });
+  }
+
+  get isVesselCauterization(): boolean {
+    return this.session?.exerciseType === 'vessel_cauterization';
+  }
+
+  onExerciseFinished(result: CauterizationResult) {
+    if (!this.session) return;
+
+    const score = Math.round((result.sealed / (result.sealed + result.missed || 1)) * 100);
+
+    this.sessionService.complete(this.session.id, {
+      precisionScore: score,
+      tremorIndex: 0, //the supervisor influence for later
+      score,
+    }).subscribe(() => {
+      this.ended = true;
+      this.endedMessage = `Sealed ${result.sealed}, missed ${result.missed}. Score: ${score}.`;
     });
   }
 

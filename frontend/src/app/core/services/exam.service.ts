@@ -42,4 +42,8 @@ export class ExamService {
   openRoom(id: string) {
     return this.http.patch<Exam>(`${this.api}/exams/${id}/open-room`, {});
   }
+
+  getOne(id: string) {
+    return this.http.get<Exam>(`${this.api}/exams/${id}`);
+  }
 }
