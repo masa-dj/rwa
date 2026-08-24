@@ -33,13 +33,9 @@ export class SessionService {
     });
   }
 
-  complete(id: string) {
-    //TODO: ad scoring sistem later
-    return this.http.patch<Session>(`${this.api}/sessions/${id}/complete`, {
-      precisionScore: 0,
-      tremorIndex: 0,
-      score: 0,
-    });
+  complete(id: string, scores?: { precisionScore: number; tremorIndex: number; score: number }) {
+    const body = scores ?? { precisionScore: 0, tremorIndex: 0, score: 0 };
+    return this.http.patch<Session>(`${this.api}/sessions/${id}/complete`, body);
   }
 
   abort(id: string) {

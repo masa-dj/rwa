@@ -4,15 +4,27 @@
   <main class="layout__content" *ngIf="!loading">
     <h1 class="layout__title">Practice</h1>
 
-    <div class="room-card" *ngIf="session && !ended">
-      <span class="room-card__label">{{ exerciseLabels[session.exerciseType] }}</span>
-      <p class="room-card__status">In progress</p>
+    <ng-container *ngIf="session && !ended">
+      <ng-container *ngIf="isVesselCauterization; else genericRoom">
+        <p class="exercise-label">{{ exerciseLabels[session.exerciseType] }}</p>
+        <app-vessel-cauterization (finished)="onExerciseFinished($event)"></app-vessel-cauterization>
 
-      <div class="room-card__actions">
-        <app-button variant="secondary" (clicked)="abort()">Abort</app-button>
-        <app-button variant="primary" (clicked)="finish()">Finish</app-button>
-      </div>
-    </div>
+        <div class="room-card__actions">
+          <app-button variant="secondary" (clicked)="abort()">Abort</app-button>
+        </div>
+      </ng-container>
+
+      <ng-template #genericRoom>
+        <div class="room-card">
+          <span class="room-card__label">{{ exerciseLabels[session.exerciseType] }}</span>
+          <p class="room-card__status">In progress</p>
+          <div class="room-card__actions">
+            <app-button variant="secondary" (clicked)="abort()">Abort</app-button>
+            <app-button variant="primary" (clicked)="finish()">Finish</app-button>
+          </div>
+        </div>
+      </ng-template>
+    </ng-container>
 
     <div class="room-card" *ngIf="ended">
       <p>{{ endedMessage }}</p>
