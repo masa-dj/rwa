@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { TelemetrySnapshot } from '../vessel-cauterization/vessel-cauterization.component';
 
 @Component({
-  selector: 'app-exam-live-view',
+  selector: 'app-vessel-cauterization-live-view',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './exam-live-view.component.html',
-  styleUrls: ['./exam-live-view.component.scss'],
+  templateUrl: './vessel-cauterization-live-view.component.html',
+  styleUrls: ['./vessel-cauterization-live-view.component.scss'],
 })
-export class ExamLiveViewComponent {
+export class VesselCauterizationLiveViewComponent {
   @Input() snapshot: TelemetrySnapshot | null = null;
 
   formatTime(ms: number): string {

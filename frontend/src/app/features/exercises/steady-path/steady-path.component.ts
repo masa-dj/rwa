@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Subject, fromEvent, interval, merge, timer } from 'rxjs';
-import { map, share, startWith, switchMap, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { auditTime, map, share, startWith, switchMap, takeUntil, withLatestFrom } from 'rxjs/operators';
 
 interface Point {
   x: number;
@@ -22,14 +22,24 @@ export interface SteadyPathResult {
   completion: number;
 }
 
-const CANVAS_WIDTH = 560;
+export interface SteadyPathTelemetrySnapshot {
+  pathD: string;
+  cursor: Point | null;
+  isOutOfBounds: boolean;
+  progressPercent: number;
+  timeRemaining: number;
+}
+
+const CANVAS_WIDTH = 800;
 const CANVAS_HEIGHT = 360;
 const PADDING = 40;
-const WAYPOINT_COUNT = 6;
-const TOLERANCE_RADIUS = 20; // half the vessel's visual width
+const WAYPOINT_COUNT = 10;
+const TOLERANCE_RADIUS = 5;
 const SAMPLE_STEP_PX = 4;
 const TICK_MS = 50;
-const DURATION_MS = 15000;
+const DURATION_MS = 20000;
+const LOOKAHEAD_SAMPLES = 20;
+
 
 @Component({
   selector: 'app-steady-path',
@@ -40,6 +50,7 @@ const DURATION_MS = 15000;
 })
 export class SteadyPathComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() finished = new EventEmitter<SteadyPathResult>();
+  @Output() telemetry = new EventEmitter<SteadyPathTelemetrySnapshot>();
 
   @ViewChild('canvas', { static: true }) canvasRef!: ElementRef<HTMLDivElement>;
   @ViewChild('pathEl', { static: true }) pathElRef!: ElementRef<SVGPathElement>;
@@ -85,6 +96,9 @@ export class SteadyPathComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const pulse$ = interval(TICK_MS).pipe(share(), takeUntil(this.destroy$));
 
+    pulse$.pipe(auditTime(50), takeUntil(this.destroy$)).subscribe(() => this.emitTelemetry());
+
+
     const pointerMove$ = fromEvent<PointerEvent>(el, 'pointermove').pipe(
       map((e) => this.relativePos(e)),
       share(),
@@ -125,24 +139,28 @@ export class SteadyPathComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.ended) return;
 
     this.cursor = pos;
-    const { index, distance } = this.nearestSample(pos);
+    const { index, distance } = this.nearestSampleInWindow(pos);
 
     this.draggingTicks++;
     const inBounds = distance <= TOLERANCE_RADIUS;
     this.isOutOfBounds = !inBounds;
-    if (inBounds) this.inBoundsTicks++;
 
-    this.furthestIndex = Math.max(this.furthestIndex, index);
-    this.progressPercent = Math.round((this.furthestIndex / (this.samples.length - 1)) * 100);
-
+    if (inBounds) {
+      this.inBoundsTicks++;
+      this.furthestIndex = Math.max(this.furthestIndex, index);
+      this.progressPercent = Math.round((this.furthestIndex / (this.samples.length - 1)) * 100);
+    }
     if (this.furthestIndex >= this.samples.length - 1) {
       this.end();
     }
   }
 
-  private nearestSample(pos: Point): { index: number; distance: number } {
-    let best = { index: 0, distance: Infinity };
-    for (let i = 0; i < this.samples.length; i++) {
+  private nearestSampleInWindow(pos: Point): { index: number; distance: number } {
+    const start = this.furthestIndex;
+    const end = Math.min(this.samples.length - 1, this.furthestIndex + LOOKAHEAD_SAMPLES);
+
+    let best = { index: this.furthestIndex, distance: Infinity };
+    for (let i = start; i <= end; i++) {
       const dx = pos.x - this.samples[i].x;
       const dy = pos.y - this.samples[i].y;
       const d = Math.sqrt(dx * dx + dy * dy);
@@ -179,6 +197,16 @@ export class SteadyPathComponent implements OnInit, AfterViewInit, OnDestroy {
       d += ` C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2.x} ${p2.y}`;
     }
     return d;
+  }
+
+  private emitTelemetry() {
+    this.telemetry.emit({
+      pathD: this.pathD,
+      cursor: this.cursor,
+      isOutOfBounds: this.isOutOfBounds,
+      progressPercent: this.progressPercent,
+      timeRemaining: this.timeRemaining,
+    });
   }
 
   private end() {
