@@ -47,7 +47,24 @@
       </ng-container>
 
       <ng-container *ngIf="isSupervisor && isVesselCauterization">
-        <app-exam-live-view [snapshot]="latestTelemetry"></app-exam-live-view>
+        <app-vessel-cauterization-live-view [snapshot]="latestVCTelemetry"></app-vessel-cauterization-live-view>
+        <div class="room-card__actions">
+          <app-button variant="danger" (clicked)="abort()">Abort</app-button>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="!isSupervisor && isSteadyPath">
+        <app-steady-path
+          (telemetry)="onSteadyPathTelemetry($event)"
+          (finished)="onSteadyPathFinished($event)"
+        ></app-steady-path>
+        <div class="room-card__actions">
+          <app-button variant="danger" (clicked)="abort()">Abort</app-button>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="isSupervisor && isSteadyPath">
+        <app-steady-path-live-view [snapshot]="latestSteadyPathTelemetry"></app-steady-path-live-view>
         <div class="room-card__actions">
           <app-button variant="danger" (clicked)="abort()">Abort</app-button>
         </div>

@@ -7,14 +7,19 @@ import { ExamService, Exam } from '../../core/services/exam.service';
 import { SidebarComponent } from '../../shared/ui/sidebar/sidebar.component';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
 import { VesselCauterizationComponent, CauterizationResult, TelemetrySnapshot } from '../exercises/vessel-cauterization/vessel-cauterization.component';
-import { ExamLiveViewComponent } from '../exercises/exam-live-view/exam-live-view.component';
+import { VesselCauterizationLiveViewComponent } from '../exercises/vessel-cauterization-live-view/vessel-cauterization-live-view.component';
+import { SteadyPathComponent, SteadyPathResult, SteadyPathTelemetrySnapshot } from '../exercises/steady-path/steady-path.component';
+import { SteadyPathLiveViewComponent } from '../exercises/steady-path-live-view/steady-path-live-view.component';
+
 
 type RoomStatus = 'connecting' | 'waiting' | 'in_progress' | 'ended' | 'error';
 
 @Component({
   selector: 'app-exam-room',
   standalone: true,
-  imports: [CommonModule, SidebarComponent, ButtonComponent, VesselCauterizationComponent, ExamLiveViewComponent],
+  imports: [CommonModule, SidebarComponent, ButtonComponent,
+    VesselCauterizationComponent, VesselCauterizationLiveViewComponent,
+    SteadyPathComponent, SteadyPathLiveViewComponent,],
   templateUrl: './exam-room.component.html',
   styleUrls: ['./exam-room.component.scss'],
 })
@@ -28,7 +33,8 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
   myReady = false;
   errorMessage = '';
   endedMessage = '';
-  latestTelemetry: TelemetrySnapshot | null = null;
+  latestVCTelemetry: TelemetrySnapshot | null = null;
+  latestSteadyPathTelemetry: SteadyPathTelemetrySnapshot | null = null;
 
   private socket: Socket | null = null;
 
@@ -41,8 +47,8 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
     },
     steady_path: {
       equipment: 'Mouse',
-      time: '',
-      description: '',
+      time: '20 seconds',
+      description: 'A winding vessel will appear on the canvas. Click and drag from the start, staying inside the corridor as you trace toward the end. Drifting outside the tolerance hurts your precision score.',
     },
     timed_suture: {
       equipment: 'Mouse',
@@ -83,9 +89,12 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
       this.status = 'in_progress';
     });
 
-    this.socket.on('exam:telemetry', (snapshot: TelemetrySnapshot) => {
-      console.log('[supervisor] telemetry received', snapshot);
-      this.latestTelemetry = snapshot;
+    this.socket.on('exam:telemetry', (data: any) => {
+      if (this.exam?.exerciseType === 'vessel_cauterization') {
+        this.latestVCTelemetry = data;
+      } else if (this.exam?.exerciseType === 'steady_path') {
+        this.latestSteadyPathTelemetry = data;
+      }
     });
 
     this.socket.on('exam:aborted', () => {
@@ -106,6 +115,18 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
 
   get isVesselCauterization(): boolean {
     return this.exam?.exerciseType === 'vessel_cauterization';
+  }
+
+  get isSteadyPath(): boolean {
+    return this.exam?.exerciseType === 'steady_path';
+  }
+  onSteadyPathTelemetry(snapshot: SteadyPathTelemetrySnapshot) {
+    this.socket?.emit('exam:telemetry', snapshot);
+  }
+
+  onSteadyPathFinished(result: SteadyPathResult) {
+    const score = Math.round(result.precision * 0.6 + result.completion * 0.4);
+    this.socket?.emit('exam:finish', { precisionScore: result.precision, tremorIndex: 0, score });
   }
 
   markReady() { this.socket?.emit('exam:ready'); }

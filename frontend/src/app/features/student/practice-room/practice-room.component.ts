@@ -5,11 +5,12 @@ import { SessionService, Session } from '../../../core/services/session.service'
 import { SidebarComponent } from '../../../shared/ui/sidebar/sidebar.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { VesselCauterizationComponent, CauterizationResult } from '../../exercises/vessel-cauterization/vessel-cauterization.component';
+import { SteadyPathComponent, SteadyPathResult } from '../../exercises/steady-path/steady-path.component';
 
 @Component({
   selector: 'app-practice-room',
   standalone: true,
-  imports: [CommonModule, SidebarComponent, ButtonComponent, VesselCauterizationComponent],
+  imports: [CommonModule, SidebarComponent, ButtonComponent, VesselCauterizationComponent, SteadyPathComponent],
   templateUrl: './practice-room.component.html',
   styleUrls: ['./practice-room.component.scss'],
 })
@@ -41,6 +42,25 @@ export class PracticeRoomComponent implements OnInit {
 
   get isVesselCauterization(): boolean {
     return this.session?.exerciseType === 'vessel_cauterization';
+  }
+
+  get isSteadyPath(): boolean {
+    return this.session?.exerciseType === 'steady_path';
+  }
+
+  onSteadyPathFinished(result: SteadyPathResult) {
+    if (!this.session) return;
+    //kinda idiotic score for now
+    const score = Math.round(result.precision * 0.6 + result.completion * 0.4);
+
+    this.sessionService.complete(this.session.id, {
+      precisionScore: result.precision,
+      tremorIndex: 0,
+      score,
+    }).subscribe(() => {
+      this.ended = true;
+      this.endedMessage = `Precision ${result.precision}%, reached ${result.completion}% of the path. Score: ${score}.`;
+    });
   }
 
   onExerciseFinished(result: CauterizationResult) {

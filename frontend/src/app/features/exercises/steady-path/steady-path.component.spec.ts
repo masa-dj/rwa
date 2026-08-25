@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ExamLiveViewComponent } from './exam-live-view.component';
+import { SteadyPathComponent } from './steady-path.component';
 
-describe('ExamLiveViewComponent', () => {
-  let component: ExamLiveViewComponent;
-  let fixture: ComponentFixture<ExamLiveViewComponent>;
+describe('SteadyPathComponent', () => {
+  let component: SteadyPathComponent;
+  let fixture: ComponentFixture<SteadyPathComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [ExamLiveViewComponent]
+      imports: [SteadyPathComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ExamLiveViewComponent);
+    fixture = TestBed.createComponent(SteadyPathComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

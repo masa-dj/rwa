@@ -5,7 +5,7 @@
     <h1 class="layout__title">Practice</h1>
 
     <ng-container *ngIf="session && !ended">
-      <ng-container *ngIf="isVesselCauterization; else genericRoom">
+      <ng-container *ngIf="isVesselCauterization; else checkSteadyPath">
         <p class="exercise-label">{{ exerciseLabels[session.exerciseType] }}</p>
         <app-vessel-cauterization (finished)="onExerciseFinished($event)"></app-vessel-cauterization>
 
@@ -13,6 +13,14 @@
           <app-button variant="secondary" (clicked)="abort()">Abort</app-button>
         </div>
       </ng-container>
+      <ng-template #checkSteadyPath>
+        <ng-container *ngIf="isSteadyPath; else genericRoom">
+          <p class="exercise-label">{{ exerciseLabels[session.exerciseType] }}</p>
+          <app-steady-path (finished)="onSteadyPathFinished($event)"></app-steady-path>
+          <div class="room-card__actions">
+            <app-button variant="secondary" (clicked)="abort()">Abort</app-button>
+          </div>
+        </ng-container>
 
       <ng-template #genericRoom>
         <div class="room-card">
@@ -24,6 +32,7 @@
           </div>
         </div>
       </ng-template>
+    </ng-template>
     </ng-container>
 
     <div class="room-card" *ngIf="ended">
