@@ -5,70 +5,73 @@ import { ButtonComponent } from '../button/button.component';
 import { AuthService } from '../../../core/services/auth.service';
 
 import {
-  LucideLayoutDashboard,
-  LucideClipboardList,
-  LucideNewspaper,
-  LucideUserCog,
-  LucideLogOut,
-  LucideLibrary,
-  LucideNotebookPen,
+    LucideLayoutDashboard,
+    LucideClipboardList,
+    LucideNewspaper,
+    LucideUserCog,
+    LucideLogOut,
+    LucideLibrary,
+    LucideNotebookPen,
 } from '@lucide/angular';
 
-
 interface NavItem {
-  label: string;
-  route: string;
-  icon: any;
+    label: string;
+    route: string;
+    icon: any;
 }
 
 const SUPERVISOR_NAV: NavItem[] = [
-  { label: 'Dashboard', route: '/dashboard',icon: LucideLayoutDashboard },
-  { label: 'Exams', route: '/exams', icon: LucideClipboardList},
-  { label: 'Reports', route: '/dashboard', icon: LucideLibrary }, // /reports
-  { label: 'News', route: '/news', icon: LucideNewspaper },
+    { label: 'Dashboard', route: '/dashboard', icon: LucideLayoutDashboard },
+    { label: 'Exams', route: '/exams', icon: LucideClipboardList },
+    { label: 'Reports', route: '/reports', icon: LucideLibrary },
+    { label: 'News', route: '/news', icon: LucideNewspaper },
 ];
 
 const STUDENT_NAV: NavItem[] = [
-  { label: 'Dashboard', route: '/dashboard', icon: LucideLayoutDashboard  },
-  { label: 'Practice', route: '/practice', icon: LucideNotebookPen },
-  { label: 'Exams', route: '/exams', icon: LucideClipboardList },
-  { label: 'Reports', route: '/dashboard', icon: LucideLibrary },  // /reports
-  { label: 'News', route: '/news', icon: LucideNewspaper },
+    { label: 'Dashboard', route: '/dashboard', icon: LucideLayoutDashboard },
+    { label: 'Practice', route: '/practice', icon: LucideNotebookPen },
+    { label: 'Exams', route: '/exams', icon: LucideClipboardList },
+    { label: 'Reports', route: '/reports', icon: LucideLibrary },
+    { label: 'News', route: '/news', icon: LucideNewspaper },
 ];
 
-const USERS_NAV_ITEM: NavItem = { label: 'Users', route: '/admin/users', icon: LucideUserCog  };
+const USERS_NAV_ITEM: NavItem = {
+    label: 'Users',
+    route: '/admin/users',
+    icon: LucideUserCog,
+};
 
 @Component({
-  selector: 'app-sidebar',
-  standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, ButtonComponent],
-  templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.scss'],
+    selector: 'app-sidebar',
+    standalone: true,
+    imports: [CommonModule, RouterLink, RouterLinkActive, ButtonComponent],
+    templateUrl: './sidebar.component.html',
+    styleUrls: ['./sidebar.component.scss'],
 })
 export class SidebarComponent {
-  readonly LogOutIcon = LucideLogOut;
-  constructor(private authService: AuthService, private router: Router) {}
+    readonly LogOutIcon = LucideLogOut;
+    constructor(private authService: AuthService, private router: Router) {}
 
-  get isSupervisor(): boolean {
-    return this.authService.getUser()?.role === 'supervisor';
-  }
+    get isSupervisor(): boolean {
+        return this.authService.getUser()?.role === 'supervisor';
+    }
 
-  get navItems(): NavItem[] {
-    const role = this.authService.getUser()?.role;
-    return role === 'supervisor' ? SUPERVISOR_NAV : STUDENT_NAV;
-  }
+    get navItems(): NavItem[] {
+        const role = this.authService.getUser()?.role;
+        return role === 'supervisor' ? SUPERVISOR_NAV : STUDENT_NAV;
+    }
 
-  get usersNavItem(): NavItem {
-    return USERS_NAV_ITEM;
-  }
+    get usersNavItem(): NavItem {
+        return USERS_NAV_ITEM;
+    }
 
-  get userName(): string {
-    const u = this.authService.getUser();
-    return u ? `${u.firstName} ${u.lastName}` : '';
-  }
+    get userName(): string {
+        const u = this.authService.getUser();
+        return u ? `${u.firstName} ${u.lastName}` : '';
+    }
 
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/login']);
-  }
+    logout() {
+        this.authService.logout();
+        this.router.navigate(['/login']);
+    }
 }

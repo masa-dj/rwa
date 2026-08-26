@@ -32,6 +32,7 @@
               <ng-container *ngIf="isSupervisor">
                 <app-button *ngIf="canOpenRoom(e)" variant="primary" (clicked)="openRoom(e)">Start</app-button>
                 <app-button *ngIf="canEnterAsSupervisor(e)" variant="secondary" (clicked)="enterRoom(e)">Enter Room</app-button>
+                <app-button *ngIf="canGrade(e)" variant="secondary" (clicked)="gradeExam(e)">Grade</app-button>
               </ng-container>
               <app-button *ngIf="!isSupervisor && canJoinAsStudent(e)" variant="primary" (clicked)="enterRoom(e)">Join</app-button>
             </td>

@@ -1,0 +1,37 @@
+<div class="layout">
+    <app-sidebar></app-sidebar>
+
+    <main class="layout__content">
+        <h1 class="layout__title">Reports</h1>
+        <p class="layout__subtitle">Exam feedback and grades</p>
+
+        <div class="table-card" *ngIf="!loading">
+            <table class="reports-table" *ngIf="reports.length > 0">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Auto Grade</th>
+                        <th>Supervisor Grade</th>
+                        <th>Retry?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr
+                        *ngFor="let r of reports"
+                        (click)="open(r)"
+                        class="reports-table__row"
+                    >
+                        <td>{{ r.timestamp | date : "MMM d, y · h:mm a" }}</td>
+                        <td>{{ r.autoGrade ?? "—" }}</td>
+                        <td>{{ r.supervisorGrade ?? "Pending" }}</td>
+                        <td>{{ r.recommendsRetry ? "Yes" : "No" }}</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p class="empty-state" *ngIf="reports.length === 0">
+                No reports yet.
+            </p>
+        </div>
+    </main>
+</div>
