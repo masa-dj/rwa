@@ -90,7 +90,7 @@ export class ExamGateway {
     @SubscribeMessage('exam:finish')
     async handleFinish(
         @ConnectedSocket() client: Socket,
-        @MessageBody() data: { precisionScore: number; tremorIndex: number; score: number },
+        @MessageBody() data: { precisionScore: number; tremorIndex: number; score: number; reactionTime?: number },
     ) {
         const { examId, role } = client.data;
         if (role !== 'student') return;

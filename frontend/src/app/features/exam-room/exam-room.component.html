@@ -1,84 +1,139 @@
 <div class="layout">
-  <app-sidebar></app-sidebar>
+    <app-sidebar></app-sidebar>
 
-  <main class="layout__content">
-    <h1 class="layout__title">Live Exam Room</h1>
+    <main class="layout__content">
+        <h1 class="layout__title">Live Exam Room</h1>
 
-    <div class="room-card" *ngIf="status === 'connecting'"><p>Connecting…</p></div>
-
-    <div class="room-card" *ngIf="status === 'waiting'">
-      <div class="instructions" *ngIf="currentExerciseInfo">
-        <span class="instructions__label">Instructions</span>
-
-        <div class="instructions__row">
-          <span class="instructions__key">Equipment needed</span>
-          <span class="instructions__value">{{ currentExerciseInfo.equipment }}</span>
+        <div class="room-card" *ngIf="status === 'connecting'">
+            <p>Connecting…</p>
         </div>
 
-        <div class="instructions__row">
-          <span class="instructions__key">Time</span>
-          <span class="instructions__value">{{ currentExerciseInfo.time }}</span>
+        <div class="room-card" *ngIf="status === 'waiting'">
+            <div class="instructions" *ngIf="currentExerciseInfo">
+                <span class="instructions__label">Instructions</span>
+
+                <div class="instructions__row">
+                    <span class="instructions__key">Equipment needed</span>
+                    <span class="instructions__value">{{
+                        currentExerciseInfo.equipment
+                    }}</span>
+                </div>
+
+                <div class="instructions__row">
+                    <span class="instructions__key">Time</span>
+                    <span class="instructions__value">{{
+                        currentExerciseInfo.time
+                    }}</span>
+                </div>
+
+                <p class="instructions__description">
+                    {{ currentExerciseInfo.description }}
+                </p>
+            </div>
+            <div class="ready-row">
+                <span class="ready-row__label">Supervisor</span>
+                <span class="ready-badge" [class.is-ready]="supervisorReady">{{
+                    supervisorReady ? "Ready" : "Waiting"
+                }}</span>
+            </div>
+            <div class="ready-row">
+                <span class="ready-row__label">Student</span>
+                <span class="ready-badge" [class.is-ready]="studentReady">{{
+                    studentReady ? "Ready" : "Waiting"
+                }}</span>
+            </div>
+            <app-button
+                variant="primary"
+                [disabled]="myReady"
+                (clicked)="markReady()"
+            >
+                {{ myReady ? "Waiting for the other side…" : "Ready" }}
+            </app-button>
         </div>
 
-        <p class="instructions__description">{{ currentExerciseInfo.description }}</p>
-      </div>
-      <div class="ready-row">
-        <span class="ready-row__label">Supervisor</span>
-        <span class="ready-badge" [class.is-ready]="supervisorReady">{{ supervisorReady ? 'Ready' : 'Waiting' }}</span>
-      </div>
-      <div class="ready-row">
-        <span class="ready-row__label">Student</span>
-        <span class="ready-badge" [class.is-ready]="studentReady">{{ studentReady ? 'Ready' : 'Waiting' }}</span>
-      </div>
-      <app-button variant="primary" [disabled]="myReady" (clicked)="markReady()">
-        {{ myReady ? 'Waiting for the other side…' : 'Ready' }}
-      </app-button>
-    </div>
+        <ng-container *ngIf="status === 'in_progress'">
+            <ng-container *ngIf="!isSupervisor && isVesselCauterization">
+                <app-vessel-cauterization
+                    (telemetry)="onTelemetry($event)"
+                    (finished)="onExerciseFinished($event)"
+                ></app-vessel-cauterization>
+                <div class="room-card__actions">
+                    <app-button variant="danger" (clicked)="abort()"
+                        >Abort</app-button
+                    >
+                </div>
+            </ng-container>
 
-    <ng-container *ngIf="status === 'in_progress'">
-      <ng-container *ngIf="!isSupervisor && isVesselCauterization">
-        <app-vessel-cauterization
-          (telemetry)="onTelemetry($event)"
-          (finished)="onExerciseFinished($event)"
-        ></app-vessel-cauterization>
-        <div class="room-card__actions">
-          <app-button variant="danger" (clicked)="abort()">Abort</app-button>
+            <ng-container *ngIf="isSupervisor && isVesselCauterization">
+                <app-vessel-cauterization-live-view
+                    [snapshot]="latestVCTelemetry"
+                ></app-vessel-cauterization-live-view>
+                <div class="room-card__actions">
+                    <app-button variant="danger" (clicked)="abort()"
+                        >Abort</app-button
+                    >
+                </div>
+            </ng-container>
+
+            <ng-container *ngIf="!isSupervisor && isSteadyPath">
+                <app-steady-path
+                    (telemetry)="onSteadyPathTelemetry($event)"
+                    (finished)="onSteadyPathFinished($event)"
+                ></app-steady-path>
+                <div class="room-card__actions">
+                    <app-button variant="danger" (clicked)="abort()"
+                        >Abort</app-button
+                    >
+                </div>
+            </ng-container>
+
+            <ng-container *ngIf="isSupervisor && isSteadyPath">
+                <app-steady-path-live-view
+                    [snapshot]="latestSteadyPathTelemetry"
+                ></app-steady-path-live-view>
+                <div class="room-card__actions">
+                    <app-button variant="danger" (clicked)="abort()"
+                        >Abort</app-button
+                    >
+                </div>
+            </ng-container>
+            <ng-container *ngIf="!isSupervisor && isTimedSuture">
+                <app-timed-suture
+                    (telemetry)="onTimedSutureTelemetry($event)"
+                    (finished)="onTimedSutureFinished($event)"
+                ></app-timed-suture>
+                <div class="room-card__actions">
+                    <app-button variant="danger" (clicked)="abort()"
+                        >Abort</app-button
+                    >
+                </div>
+            </ng-container>
+
+            <ng-container *ngIf="isSupervisor && isTimedSuture">
+                <app-timed-suture-live-view
+                    [snapshot]="latestTimedSutureTelemetry"
+                ></app-timed-suture-live-view>
+                <div class="room-card__actions">
+                    <app-button variant="danger" (clicked)="abort()"
+                        >Abort</app-button
+                    >
+                </div>
+            </ng-container>
+        </ng-container>
+
+
+        <div class="room-card" *ngIf="status === 'ended'">
+            <p>{{ endedMessage }}</p>
+            <app-button variant="secondary" (clicked)="backToExams()"
+                >Back to Exams</app-button
+            >
         </div>
-      </ng-container>
 
-      <ng-container *ngIf="isSupervisor && isVesselCauterization">
-        <app-vessel-cauterization-live-view [snapshot]="latestVCTelemetry"></app-vessel-cauterization-live-view>
-        <div class="room-card__actions">
-          <app-button variant="danger" (clicked)="abort()">Abort</app-button>
+        <div class="room-card" *ngIf="status === 'error'">
+            <p class="error">{{ errorMessage }}</p>
+            <app-button variant="secondary" (clicked)="backToExams()"
+                >Back to Exams</app-button
+            >
         </div>
-      </ng-container>
-
-      <ng-container *ngIf="!isSupervisor && isSteadyPath">
-        <app-steady-path
-          (telemetry)="onSteadyPathTelemetry($event)"
-          (finished)="onSteadyPathFinished($event)"
-        ></app-steady-path>
-        <div class="room-card__actions">
-          <app-button variant="danger" (clicked)="abort()">Abort</app-button>
-        </div>
-      </ng-container>
-
-      <ng-container *ngIf="isSupervisor && isSteadyPath">
-        <app-steady-path-live-view [snapshot]="latestSteadyPathTelemetry"></app-steady-path-live-view>
-        <div class="room-card__actions">
-          <app-button variant="danger" (clicked)="abort()">Abort</app-button>
-        </div>
-      </ng-container>
-    </ng-container>
-
-    <div class="room-card" *ngIf="status === 'ended'">
-      <p>{{ endedMessage }}</p>
-      <app-button variant="secondary" (clicked)="backToExams()">Back to Exams</app-button>
-    </div>
-
-    <div class="room-card" *ngIf="status === 'error'">
-      <p class="error">{{ errorMessage }}</p>
-      <app-button variant="secondary" (clicked)="backToExams()">Back to Exams</app-button>
-    </div>
-  </main>
+    </main>
 </div>

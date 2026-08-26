@@ -6,11 +6,12 @@ import { SidebarComponent } from '../../../shared/ui/sidebar/sidebar.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 import { VesselCauterizationComponent, CauterizationResult } from '../../exercises/vessel-cauterization/vessel-cauterization.component';
 import { SteadyPathComponent, SteadyPathResult } from '../../exercises/steady-path/steady-path.component';
+import { TimedSutureComponent, TimedSutureResult } from '../../exercises/timed-suture/timed-suture.component';
 
 @Component({
   selector: 'app-practice-room',
   standalone: true,
-  imports: [CommonModule, SidebarComponent, ButtonComponent, VesselCauterizationComponent, SteadyPathComponent],
+  imports: [CommonModule, SidebarComponent, ButtonComponent, VesselCauterizationComponent, SteadyPathComponent, TimedSutureComponent],
   templateUrl: './practice-room.component.html',
   styleUrls: ['./practice-room.component.scss'],
 })
@@ -75,6 +76,24 @@ export class PracticeRoomComponent implements OnInit {
     }).subscribe(() => {
       this.ended = true;
       this.endedMessage = `Sealed ${result.sealed}, missed ${result.missed}. Score: ${score}.`;
+    });
+  }
+
+  get isTimedSuture(): boolean {
+    return this.session?.exerciseType === 'timed_suture';
+  }
+
+  onTimedSutureFinished(result: TimedSutureResult) {
+    if (!this.session) return;
+
+    this.sessionService.complete(this.session.id, {
+      precisionScore: result.precision,
+      tremorIndex: 0,
+      reactionTime: result.avgReactionTimeMs,
+      score: result.score,
+    }).subscribe(() => {
+      this.ended = true;
+      this.endedMessage = `Completed ${result.completed}/${result.total} stitches, precision ${result.precision}%, avg reaction ${result.avgReactionTimeMs}ms. Score: ${result.score}.`;
     });
   }
 

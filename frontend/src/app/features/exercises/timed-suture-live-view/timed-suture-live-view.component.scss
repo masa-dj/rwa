@@ -1,0 +1,79 @@
+.live-view__hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--color-slate);
+    margin-bottom: 12px;
+}
+.live-view__timer,
+.live-view__score {
+    font-weight: 600;
+    color: var(--color-text);
+}
+.live-view__key {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: var(--radius-sm);
+    background: var(--color-paper-alt);
+    color: var(--color-slate);
+    letter-spacing: 0.05em;
+    &.is-held {
+        background: var(--color-moss-soft);
+        color: #2b6b46;
+    }
+}
+.live-view__canvas {
+    position: relative;
+    width: 560px;
+    height: 360px;
+    background: var(--color-ink);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+.live-view__svg {
+    width: 100%;
+    height: 100%;
+}
+.wound-line {
+    stroke: rgba(248, 246, 242, 0.15);
+    stroke-width: 2;
+    stroke-dasharray: 6 4;
+}
+.stitch__corridor {
+    stroke: rgba(232, 163, 61, 0.35);
+    stroke-width: 32;
+    stroke-linecap: round;
+    transition: stroke 0.1s ease;
+    &.is-held {
+        stroke: rgba(63, 143, 95, 0.4);
+    }
+}
+.stitch__point {
+    fill: rgba(248, 246, 242, 0.15);
+    stroke: rgba(248, 246, 242, 0.3);
+    stroke-width: 1.5;
+    transition: fill 0.15s ease, stroke 0.15s ease;
+    &.is-active {
+        fill: var(--color-accent-soft);
+        stroke: var(--color-accent);
+    }
+    &.is-completed {
+        fill: var(--color-moss-soft);
+        stroke: var(--color-moss);
+    }
+    &.is-missed {
+        fill: #fbeae4;
+        stroke: #c1462c;
+    }
+}
+.cursor-dot {
+    fill: var(--color-moss);
+    stroke: var(--color-text-inverse);
+    stroke-width: 2;
+    transition: fill 0.1s ease;
+    &.is-out {
+        fill: #c1462c;
+    }
+}

@@ -1,0 +1,79 @@
+<div class="exercise">
+    <div class="exercise__hud">
+        <span class="exercise__timer">{{ formatTime(timeRemaining) }}</span>
+
+        <span class="exercise__key" [class.is-held]="isKeyHeld">
+            HOLD [ {{ currentTargetKey }} ]
+        </span>
+
+        <span class="exercise__score"
+            >Stitch {{ activeIndex + 1 }} / {{ stitches.length }}</span
+        >
+    </div>
+
+    <div class="exercise__canvas" #canvas>
+        <svg [attr.viewBox]="'0 0 560 360'" class="exercise__svg">
+            <line x1="40" y1="180" x2="520" y2="180" class="wound-line" />
+
+            <g *ngFor="let s of stitches; let i = index">
+                <line
+                    *ngIf="i === activeIndex"
+                    [attr.x1]="s.entry.x"
+                    [attr.y1]="s.entry.y"
+                    [attr.x2]="s.exit.x"
+                    [attr.y2]="s.exit.y"
+                    class="stitch__corridor"
+                    [class.is-held]="isKeyHeld"
+                />
+                <circle
+                    [attr.cx]="s.entry.x"
+                    [attr.cy]="s.entry.y"
+                    [attr.r]="10"
+                    class="stitch__point"
+                    [class.is-active]="s.status === 'active'"
+                    [class.is-completed]="s.status === 'completed'"
+                    [class.is-missed]="s.status === 'missed'"
+                />
+                <circle
+                    [attr.cx]="s.exit.x"
+                    [attr.cy]="s.exit.y"
+                    [attr.r]="10"
+                    class="stitch__point"
+                    [class.is-active]="s.status === 'active'"
+                    [class.is-completed]="s.status === 'completed'"
+                    [class.is-missed]="s.status === 'missed'"
+                />
+
+                <g *ngIf="i === activeIndex" class="key-callout">
+                    <rect
+                        [attr.x]="(s.entry.x + s.exit.x) / 2 - 34"
+                        [attr.y]="Math.min(s.entry.y, s.exit.y) - 46"
+                        width="68"
+                        height="28"
+                        rx="6"
+                        class="key-callout__bg"
+                        [class.is-held]="isKeyHeld"
+                    />
+                    <text
+                        [attr.x]="(s.entry.x + s.exit.x) / 2"
+                        [attr.y]="Math.min(s.entry.y, s.exit.y) - 27"
+                        text-anchor="middle"
+                        class="key-callout__text"
+                        [class.is-held]="isKeyHeld"
+                    >
+                        {{ s.targetKey }}
+                    </text>
+                </g>
+            </g>
+
+            <circle
+                *ngIf="cursor"
+                [attr.cx]="cursor.x"
+                [attr.cy]="cursor.y"
+                r="7"
+                class="cursor-dot"
+                [class.is-out]="isOutOfBounds"
+            />
+        </svg>
+    </div>
+</div>
