@@ -8,6 +8,7 @@ import { UsersModule } from './users/user.module';
 import { PresenceModule } from './presence/presence.module';
 import { SessionModule } from './sessions/session.module';
 import { ExamModule } from './exams/exam.module';
+import { ReportModule } from './reports/report.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ExamModule } from './exams/exam.module';
     PresenceModule,
     SessionModule,
     ExamModule,
+    ReportModule,
   ],
   controllers: [AppController],
   providers: [AppService],
