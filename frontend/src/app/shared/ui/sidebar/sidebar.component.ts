@@ -7,7 +7,6 @@ import { AuthService } from '../../../core/services/auth.service';
 import {
     LucideLayoutDashboard,
     LucideClipboardList,
-    LucideNewspaper,
     LucideUserCog,
     LucideLogOut,
     LucideLibrary,
@@ -24,7 +23,6 @@ const SUPERVISOR_NAV: NavItem[] = [
     { label: 'Dashboard', route: '/dashboard', icon: LucideLayoutDashboard },
     { label: 'Exams', route: '/exams', icon: LucideClipboardList },
     { label: 'Reports', route: '/reports', icon: LucideLibrary },
-    { label: 'News', route: '/news', icon: LucideNewspaper },
 ];
 
 const STUDENT_NAV: NavItem[] = [
@@ -32,7 +30,6 @@ const STUDENT_NAV: NavItem[] = [
     { label: 'Practice', route: '/practice', icon: LucideNotebookPen },
     { label: 'Exams', route: '/exams', icon: LucideClipboardList },
     { label: 'Reports', route: '/reports', icon: LucideLibrary },
-    { label: 'News', route: '/news', icon: LucideNewspaper },
 ];
 
 const USERS_NAV_ITEM: NavItem = {
