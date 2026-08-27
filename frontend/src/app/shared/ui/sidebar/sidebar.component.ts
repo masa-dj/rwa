@@ -11,6 +11,7 @@ import {
     LucideLogOut,
     LucideLibrary,
     LucideNotebookPen,
+    LucideChartLine,
 } from '@lucide/angular';
 
 interface NavItem {
@@ -23,6 +24,7 @@ const SUPERVISOR_NAV: NavItem[] = [
     { label: 'Dashboard', route: '/dashboard', icon: LucideLayoutDashboard },
     { label: 'Exams', route: '/exams', icon: LucideClipboardList },
     { label: 'Reports', route: '/reports', icon: LucideLibrary },
+    { label: 'Analysis', route: '/analysis', icon: LucideChartLine },
 ];
 
 const STUDENT_NAV: NavItem[] = [
@@ -30,6 +32,7 @@ const STUDENT_NAV: NavItem[] = [
     { label: 'Practice', route: '/practice', icon: LucideNotebookPen },
     { label: 'Exams', route: '/exams', icon: LucideClipboardList },
     { label: 'Reports', route: '/reports', icon: LucideLibrary },
+    { label: 'Analysis', route: '/analysis', icon: LucideChartLine },
 ];
 
 const USERS_NAV_ITEM: NavItem = {

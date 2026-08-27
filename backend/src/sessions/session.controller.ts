@@ -40,15 +40,15 @@ export class SessionController {
         return this.sessionService.findAllForStudent(req.user.id);
     }
 
-    @Get(':id')
-    getOne(@Param('id') id: string) {
-        return this.sessionService.findById(id);
-    }
-
     @Get('supervised')
     @UseGuards(RolesGuard)
     @Roles(UserRole.SUPERVISOR)
     getSupervised(@Request() req: any) {
         return this.sessionService.findAllForSupervisor(req.user.id);
+    }
+
+    @Get(':id')
+    getOne(@Param('id') id: string) {
+        return this.sessionService.findById(id);
     }
 }

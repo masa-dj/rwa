@@ -15,6 +15,8 @@ import { PracticeComponent } from './features/student/practice/practice.componen
 import { PracticeRoomComponent } from './features/student/practice-room/practice-room.component';
 import { ReportsComponent } from './features/reports/reports.component';
 import { ReportDetailComponent } from './features/report-detail/report-detail.component';
+import { AnalysisComponent } from './features/analysis/analysis.component';
+
 
 
 
@@ -31,5 +33,6 @@ export const routes: Routes = [
     { path: 'practice/:id', component: PracticeRoomComponent, canActivate: [authGuard, approvedGuard] },
     { path: 'reports', component: ReportsComponent, canActivate: [authGuard, approvedGuard] },
     { path: 'reports/:id', component: ReportDetailComponent, canActivate: [authGuard, approvedGuard] },
+    { path: 'analysis', component: AnalysisComponent, canActivate: [authGuard, approvedGuard] },
     { path: '', redirectTo: 'login', pathMatch: 'full' },
 ];

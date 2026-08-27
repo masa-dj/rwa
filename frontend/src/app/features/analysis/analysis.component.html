@@ -1,0 +1,87 @@
+<div class="layout">
+    <app-sidebar></app-sidebar>
+
+    <main class="layout__content">
+        <h1 class="layout__title">Analysis</h1>
+        <p class="layout__subtitle">Performance across sessions and exams</p>
+
+        <ng-container *ngIf="!(loading$ | async)">
+            <div class="stats-row">
+                <div class="stat-card">
+                    <span class="stat-card__label">Avg Precision</span>
+                    <span class="stat-card__value"
+                        >{{ (avgPrecision$ | async) ?? 0 }}%</span
+                    >
+                </div>
+                <div
+                    class="stat-card"
+                    *ngIf="completionStats$ | async as stats"
+                >
+                    <span class="stat-card__label">Completion Rate</span>
+                    <span class="stat-card__value"
+                        >{{ stats.completionRate }}%</span
+                    >
+                </div>
+                <div
+                    class="stat-card"
+                    *ngIf="completionStats$ | async as stats"
+                >
+                    <span class="stat-card__label">Total Attempts</span>
+                    <span class="stat-card__value">{{ stats.total }}</span>
+                </div>
+            </div>
+
+            <div class="chart-card" *ngIf="scoreTrend$ | async as trend">
+                <span class="chart-card__label">Score Trend</span>
+                <svg
+                    *ngIf="trend.length > 0"
+                    viewBox="0 0 520 160"
+                    class="chart-svg"
+                >
+                    <polyline
+                        [attr.points]="buildLinePoints(trend)"
+                        class="chart-line"
+                    />
+                    <circle
+                        *ngFor="let p of trend; let i = index"
+                        [attr.cx]="dotX(trend, i)"
+                        [attr.cy]="dotY(p.score)"
+                        r="4"
+                        class="chart-dot"
+                    />
+                </svg>
+                <p class="empty-state" *ngIf="trend.length === 0">
+                    No completed sessions yet.
+                </p>
+            </div>
+
+            <div class="table-card" *ngIf="avgByExercise$ | async as breakdown">
+                <span class="chart-card__label">By Exercise</span>
+                <table class="breakdown-table" *ngIf="breakdown.length > 0">
+                    <thead>
+                        <tr>
+                            <th>Exercise</th>
+                            <th>Avg Score</th>
+                            <th>Attempts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let b of breakdown">
+                            <td>
+                                {{
+                                    exerciseLabels[b.exerciseType] ??
+                                        b.exerciseType
+                                }}
+                            </td>
+                            <td>{{ b.avgScore }}</td>
+                            <td>{{ b.count }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="empty-state" *ngIf="breakdown.length === 0">
+                    No data yet.
+                </p>
+            </div>
+        </ng-container>
+    </main>
+</div>

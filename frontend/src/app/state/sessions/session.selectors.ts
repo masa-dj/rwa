@@ -6,7 +6,7 @@ export const selectSessionsState =
 const { selectAll } = sessionsAdapter.getSelectors();
 
 export const selectAllSessions = createSelector(selectSessionsState, selectAll);
-export const selectSessionsloading = createSelector(
+export const selectSessionsLoading = createSelector(
     selectSessionsState,
     (s) => s.loading
 );
@@ -19,7 +19,7 @@ export const selectCompletedSessions = createSelector(
 export const selectScoreTrend = createSelector(
     selectCompletedSessions,
     (sessions) => {
-        sessions
+        return sessions
             .slice()
             .sort(
                 (a, b) =>
