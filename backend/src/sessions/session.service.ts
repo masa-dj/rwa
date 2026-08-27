@@ -101,4 +101,11 @@ export class SessionService {
         order: { startTime: "DESC" },
         });
     }
+
+    async findAllForSupervisor(supervisorId: string): Promise<Session[]> {
+        return this.sessionRepository.find({
+            where: { supervisorId, mode: SessionMode.EXAM },
+            order: { startTime: 'DESC' },
+        });
     }
+}
