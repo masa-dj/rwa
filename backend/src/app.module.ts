@@ -1,20 +1,21 @@
-import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './auth/auth.module';
-import { UsersModule } from './users/user.module';
-import { PresenceModule } from './presence/presence.module';
-import { SessionModule } from './sessions/session.module';
-import { ExamModule } from './exams/exam.module';
-import { ReportModule } from './reports/report.module';
+import { Module } from "@nestjs/common";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { ConfigModule } from "@nestjs/config";
+import { AuthModule } from "./auth/auth.module";
+import { UsersModule } from "./users/user.module";
+import { PresenceModule } from "./presence/presence.module";
+import { SessionModule } from "./sessions/session.module";
+import { ExamModule } from "./exams/exam.module";
+import { ReportModule } from "./reports/report.module";
+import { SurgicalEventModule } from "./surgical-events/surgical-event.module";
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     TypeOrmModule.forRoot({
-      type: 'postgres',
+      type: "postgres",
       host: process.env.DB_HOST,
       port: 5432,
       username: process.env.DB_USERNAME,
@@ -29,6 +30,7 @@ import { ReportModule } from './reports/report.module';
     SessionModule,
     ExamModule,
     ReportModule,
+    SurgicalEventModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -51,6 +51,7 @@ const LOOKAHEAD_SAMPLES = 20;
 export class SteadyPathComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() finished = new EventEmitter<SteadyPathResult>();
   @Output() telemetry = new EventEmitter<SteadyPathTelemetrySnapshot>();
+  @Output() surgicalEvent = new EventEmitter<{ type: string; x?: number; y?: number; payload?: any }>();
 
   @ViewChild('canvas', { static: true }) canvasRef!: ElementRef<HTMLDivElement>;
   @ViewChild('pathEl', { static: true }) pathElRef!: ElementRef<SVGPathElement>;
@@ -213,9 +214,12 @@ export class SteadyPathComponent implements OnInit, AfterViewInit, OnDestroy {
     if (this.ended) return;
     this.ended = true;
 
-    const precision = this.draggingTicks > 0
-      ? Math.round((this.inBoundsTicks / this.draggingTicks) * 100)
-      : 0;
+    const precision = this.draggingTicks > 0 ? Math.round((this.inBoundsTicks / this.draggingTicks) * 100) : 0;
+
+    this.surgicalEvent.emit({
+      type: this.furthestIndex >= this.samples.length - 1 ? 'path_completed' : 'path_timeout',
+      payload: { precision, completion: this.progressPercent },
+    });
 
     this.finished.emit({ precision, completion: this.progressPercent });
     this.destroy$.next();

@@ -193,6 +193,12 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
         this.socket?.emit('exam:ready');
     }
     abort() {
+        if (this.exam?.sessionId) {
+            this.socket?.emit('exam:log-event', {
+                sessionId: this.exam.sessionId,
+                type: 'exam_aborted',
+            });
+        }
         this.socket?.emit('exam:abort');
     }
 
@@ -222,5 +228,17 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.socket?.disconnect();
+    }
+    onSurgicalEvent(event: {
+        type: string;
+        x?: number;
+        y?: number;
+        payload?: any;
+    }) {
+        if (!this.exam?.sessionId) return;
+        this.socket?.emit('exam:log-event', {
+            sessionId: this.exam.sessionId,
+            ...event,
+        });
     }
 }

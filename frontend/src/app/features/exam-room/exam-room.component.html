@@ -56,6 +56,7 @@
                 <app-vessel-cauterization
                     (telemetry)="onTelemetry($event)"
                     (finished)="onExerciseFinished($event)"
+                    (surgicalEvent)="onSurgicalEvent($event)"
                 ></app-vessel-cauterization>
                 <div class="room-card__actions">
                     <app-button variant="danger" (clicked)="abort()"
@@ -79,6 +80,7 @@
                 <app-steady-path
                     (telemetry)="onSteadyPathTelemetry($event)"
                     (finished)="onSteadyPathFinished($event)"
+                    (surgicalEvent)="onSurgicalEvent($event)"
                 ></app-steady-path>
                 <div class="room-card__actions">
                     <app-button variant="danger" (clicked)="abort()"
@@ -101,6 +103,7 @@
                 <app-timed-suture
                     (telemetry)="onTimedSutureTelemetry($event)"
                     (finished)="onTimedSutureFinished($event)"
+                    (surgicalEvent)="onSurgicalEvent($event)"
                 ></app-timed-suture>
                 <div class="room-card__actions">
                     <app-button variant="danger" (clicked)="abort()"
