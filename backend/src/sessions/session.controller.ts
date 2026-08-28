@@ -4,6 +4,9 @@ import { StartSessionDto } from './dto/start-session.dto';
 import { CompleteSessionDto } from './dto/complete-session.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { UserRole } from '../users/user.entity';
 
 @ApiTags('sessions')
 @ApiBearerAuth()
@@ -35,6 +38,13 @@ export class SessionController {
     @Get('mine')
     getMine(@Request() req: any) {
         return this.sessionService.findAllForStudent(req.user.id);
+    }
+
+    @Get('supervised')
+    @UseGuards(RolesGuard)
+    @Roles(UserRole.SUPERVISOR)
+    getSupervised(@Request() req: any) {
+        return this.sessionService.findAllForSupervisor(req.user.id);
     }
 
     @Get(':id')
