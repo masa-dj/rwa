@@ -1,64 +1,131 @@
-.layout { display: flex; min-height: 100vh; }
-.layout__content { flex: 1; padding: 48px 56px; max-width: 850px; }
-.layout__title { font-family: var(--font-display); font-size: 28px; font-weight: 600; margin: 0 0 24px; }
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+.layout__content {
+    flex: 1;
+    padding: 48px 56px;
+    max-width: 850px;
+}
+.layout__title {
+    font-family: var(--font-display);
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0 0 24px;
+}
 .room-card {
-  background: #fff;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
-.ready-row { display: flex; justify-content: space-between; align-items: center; }
-.ready-row__label { font-size: 14px; color: var(--color-text); }
+.ready-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.ready-row__label {
+    font-size: 14px;
+    color: var(--color-text);
+}
 .ready-badge {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  padding: 3px 10px;
-  border-radius: var(--radius-sm);
-  background: var(--color-paper-alt);
-  color: var(--color-slate);
-  &.is-ready { background: var(--color-moss-soft); color: #2b6b46; }
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: var(--radius-sm);
+    background: var(--color-paper-alt);
+    color: var(--color-slate);
+    &.is-ready {
+        background: var(--color-moss-soft);
+        color: #2b6b46;
+    }
 }
-.room-card__status { font-family: var(--font-mono); font-size: 13px; text-transform: uppercase; color: var(--color-moss); }
-.error { color: #B3462C; }
+.room-card__status {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    text-transform: uppercase;
+    color: var(--color-moss);
+}
+.error {
+    color: #b3462c;
+}
 .instructions {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  padding-bottom: 16px;
-  margin-bottom: 8px;
-  border-bottom: 1px solid var(--color-paper-alt);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-bottom: 16px;
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--color-paper-alt);
 }
 
 .instructions__label {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--color-slate);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-slate);
 }
 
 .instructions__row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
 }
 
 .instructions__key {
-  color: var(--color-slate);
+    color: var(--color-slate);
 }
 
 .instructions__value {
-  color: var(--color-text);
-  font-weight: 600;
+    color: var(--color-text);
+    font-weight: 600;
 }
 
 .instructions__description {
-  font-size: 13px;
-  line-height: 1.6;
-  color: var(--color-text);
-  margin: 6px 0 0;
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--color-text);
+    margin: 6px 0 0;
+}
+
+.intervention-controls {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
+.freeze-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(193, 70, 44, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text);
+    font-family: var(--font-mono);
+    font-size: 18px;
+    font-weight: 600;
+    z-index: 100;
+    pointer-events: all;
+}
+.is-shaking {
+    animation: shake 0.1s infinite;
+}
+@keyframes shake {
+    0%,
+    100% {
+        transform: translate(0, 0);
+    }
+    25% {
+        transform: translate(-4px, 2px);
+    }
+    50% {
+        transform: translate(4px, -2px);
+    }
+    75% {
+        transform: translate(-2px, -4px);
+    }
 }

@@ -10,6 +10,7 @@ import { JwtService } from "@nestjs/jwt";
 import { ExamRoomService } from "./exam-room.service";
 import { ExamService } from "./exam.service";
 import { SurgicalEventService } from "../surgical-events/surgical-event.service";
+import { ExamStatus } from "./exam.entity";
 
 @WebSocketGateway({ cors: { origin: "*" } })
 export class ExamGateway {
@@ -148,5 +149,69 @@ export class ExamGateway {
             payload: data.payload,
         }, userId
         );
+    }
+
+    @SubscribeMessage('exam:trigger-freeze')
+    async handleTriggerFreeze(@ConnectedSocket() client: Socket) {
+        const { examId, role, userId } = client.data;
+        if (role !== 'supervisor' || !examId) return;
+
+        const exam = await this.examService.findById(examId);
+        if (!exam.sessionId || exam.status !== ExamStatus.IN_PROGRESS) return;
+
+        if (exam.exerciseType !== 'vessel_cauterization' && exam.exerciseType !== 'steady_path') return;
+
+        const used = await this.surgicalEventService.countByType(exam.sessionId, 'freeze_triggered');
+        if (used >= 1) {
+            client.emit('exam:error', { message: 'Freeze already used' });
+            return;
+        }
+
+        await this.surgicalEventService.create(
+            { sessionId: exam.sessionId, type: 'freeze_triggered', payload: {} },
+            userId,
+        );
+
+        this.server.to(`exam:${examId}`).emit('exam:freeze');
+    }
+
+    @SubscribeMessage('exam:freeze-acknowledged')
+    async handleFreezeAcknowledged(@ConnectedSocket() client: Socket) {
+        const { examId, role, userId } = client.data;
+        if (role !== 'student' || !examId) return;
+
+        const exam = await this.examService.findById(examId);
+        if (!exam.sessionId) return;
+
+        await this.surgicalEventService.create(
+            { sessionId: exam.sessionId, type: 'freeze_acknowledged' },
+            userId,
+        );
+
+        this.server.to(`exam:${examId}`).emit('exam:unfreeze');
+    }
+
+    @SubscribeMessage('exam:trigger-tremor')
+    async handleTriggerTremor(@ConnectedSocket() client: Socket) {
+        const { examId, role, userId } = client.data;
+        if (role !== 'supervisor' || !examId) return;
+
+        const exam = await this.examService.findById(examId);
+        if (!exam.sessionId || exam.status !== ExamStatus.IN_PROGRESS) return;
+
+        if (exam.exerciseType !== 'vessel_cauterization' && exam.exerciseType !== 'timed_suture') return;
+
+        const used = await this.surgicalEventService.countByType(exam.sessionId, 'tremor_triggered');
+        if (used >= 1) {
+            client.emit('exam:error', { message: 'Tremor already used' });
+            return;
+        }
+
+        await this.surgicalEventService.create(
+            { sessionId: exam.sessionId, type: 'tremor_triggered', payload: {} },
+            userId,
+        );
+
+        this.server.to(`exam:${examId}`).emit('exam:tremor');
     }
 }

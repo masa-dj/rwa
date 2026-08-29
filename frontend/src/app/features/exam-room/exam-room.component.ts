@@ -24,6 +24,7 @@ import {
     TimedSutureTelemetrySnapshot,
 } from '../exercises/timed-suture/timed-suture.component';
 import { TimedSutureLiveViewComponent } from '../exercises/timed-suture-live-view/timed-suture-live-view.component';
+import { filter, fromEvent } from 'rxjs';
 
 type RoomStatus = 'connecting' | 'waiting' | 'in_progress' | 'ended' | 'error';
 
@@ -57,6 +58,10 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
     latestVCTelemetry: TelemetrySnapshot | null = null;
     latestSteadyPathTelemetry: SteadyPathTelemetrySnapshot | null = null;
     latestTimedSutureTelemetry: TimedSutureTelemetrySnapshot | null = null;
+    isFrozen = false;
+    isShaking = false;
+    tremorUsesLeft = 1;
+    freezeUsesLeft = 1;
 
     private socket: Socket | null = null;
 
@@ -93,7 +98,7 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
     ngOnInit() {
         this.examId = this.route.snapshot.paramMap.get('id')!;
         this.isSupervisor = this.authService.getUser()?.role === 'supervisor';
-
+        this.setupFreezeAcknowledge();
         this.examService.getOne(this.examId).subscribe((exam) => {
             this.exam = exam;
             if (exam.status === 'in_progress') this.status = 'in_progress'; // rejoin mid-exam
@@ -148,8 +153,28 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
             this.status = 'error';
             this.errorMessage = err.message;
         });
-    }
 
+        this.socket.on('exam:freeze', () => {
+            this.isFrozen = true;
+            this.freezeUsesLeft = 0;
+        });
+
+        this.socket.on('exam:unfreeze', () => {
+            this.isFrozen = false;
+        });
+
+        this.socket.on('exam:tremor', () => {
+            this.isShaking = true;
+            this.tremorUsesLeft = 0;
+            setTimeout(() => (this.isShaking = false), 2000);
+        });
+
+    }
+    private setupFreezeAcknowledge() {
+        fromEvent<KeyboardEvent>(window, 'keydown')
+            .pipe(filter((e) => e.code === 'Space' && this.isFrozen))
+            .subscribe(() => this.socket?.emit('exam:freeze-acknowledged'));
+    }
     get isVesselCauterization(): boolean {
         return this.exam?.exerciseType === 'vessel_cauterization';
     }
@@ -240,5 +265,20 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
             sessionId: this.exam.sessionId,
             ...event,
         });
+    }
+
+    triggerFreeze() {
+        this.socket?.emit('exam:trigger-freeze');
+    }
+
+    triggerTremor() {
+        this.socket?.emit('exam:trigger-tremor');
+    }
+    get canFreeze(): boolean {
+        return this.isVesselCauterization || this.isSteadyPath;
+    }
+
+    get canTremor(): boolean {
+        return this.isVesselCauterization || this.isTimedSuture;
     }
 }

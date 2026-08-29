@@ -33,4 +33,8 @@ export class SurgicalEventService {
             order: { timestamp: "ASC" },
         });
     }
+
+    async countByType(sessionId: string, type: string): Promise<number> {
+        return this.surgicalEventRepository.count({ where: { sessionId, type } });
+    }
 }

@@ -53,11 +53,13 @@
 
         <ng-container *ngIf="status === 'in_progress'">
             <ng-container *ngIf="!isSupervisor && isVesselCauterization">
-                <app-vessel-cauterization
-                    (telemetry)="onTelemetry($event)"
-                    (finished)="onExerciseFinished($event)"
-                    (surgicalEvent)="onSurgicalEvent($event)"
-                ></app-vessel-cauterization>
+                <div [class.is-shaking]="isShaking">
+                    <app-vessel-cauterization
+                        (telemetry)="onTelemetry($event)"
+                        (finished)="onExerciseFinished($event)"
+                        (surgicalEvent)="onSurgicalEvent($event)"
+                    ></app-vessel-cauterization>
+                </div>
                 <div class="room-card__actions">
                     <app-button variant="danger" (clicked)="abort()"
                         >Abort</app-button
@@ -70,6 +72,24 @@
                     [snapshot]="latestVCTelemetry"
                 ></app-vessel-cauterization-live-view>
                 <div class="room-card__actions">
+                    <div class="intervention-controls">
+                        <app-button
+                            *ngIf="canFreeze"
+                            variant="secondary"
+                            [disabled]="freezeUsesLeft === 0"
+                            (clicked)="triggerFreeze()"
+                        >
+                            Freeze ({{ freezeUsesLeft }} left)
+                        </app-button>
+                        <app-button
+                            *ngIf="canTremor"
+                            variant="secondary"
+                            [disabled]="tremorUsesLeft === 0"
+                            (clicked)="triggerTremor()"
+                        >
+                            Tremor ({{ tremorUsesLeft }} left)
+                        </app-button>
+                    </div>
                     <app-button variant="danger" (clicked)="abort()"
                         >Abort</app-button
                     >
@@ -94,17 +114,29 @@
                     [snapshot]="latestSteadyPathTelemetry"
                 ></app-steady-path-live-view>
                 <div class="room-card__actions">
+                    <div class="intervention-controls">
+                        <app-button
+                            *ngIf="canFreeze"
+                            variant="secondary"
+                            [disabled]="freezeUsesLeft === 0"
+                            (clicked)="triggerFreeze()"
+                        >
+                            Freeze ({{ freezeUsesLeft }} left)
+                        </app-button>
+                    </div>
                     <app-button variant="danger" (clicked)="abort()"
                         >Abort</app-button
                     >
                 </div>
             </ng-container>
             <ng-container *ngIf="!isSupervisor && isTimedSuture">
-                <app-timed-suture
-                    (telemetry)="onTimedSutureTelemetry($event)"
-                    (finished)="onTimedSutureFinished($event)"
-                    (surgicalEvent)="onSurgicalEvent($event)"
-                ></app-timed-suture>
+                <div [class.is-shaking]="isShaking">
+                    <app-timed-suture
+                        (telemetry)="onTimedSutureTelemetry($event)"
+                        (finished)="onTimedSutureFinished($event)"
+                        (surgicalEvent)="onSurgicalEvent($event)"
+                    ></app-timed-suture>
+                </div>
                 <div class="room-card__actions">
                     <app-button variant="danger" (clicked)="abort()"
                         >Abort</app-button
@@ -117,13 +149,22 @@
                     [snapshot]="latestTimedSutureTelemetry"
                 ></app-timed-suture-live-view>
                 <div class="room-card__actions">
+                    <div class="intervention-controls">
+                        <app-button
+                            *ngIf="canTremor"
+                            variant="secondary"
+                            [disabled]="tremorUsesLeft === 0"
+                            (clicked)="triggerTremor()"
+                        >
+                            Tremor ({{ tremorUsesLeft }} left)
+                        </app-button>
+                    </div>
                     <app-button variant="danger" (clicked)="abort()"
                         >Abort</app-button
                     >
                 </div>
             </ng-container>
         </ng-container>
-
 
         <div class="room-card" *ngIf="status === 'ended'">
             <p>{{ endedMessage }}</p>
@@ -137,6 +178,9 @@
             <app-button variant="secondary" (clicked)="backToExams()"
                 >Back to Exams</app-button
             >
+        </div>
+        <div class="freeze-overlay" *ngIf="!isSupervisor && isFrozen">
+            <p>Frozen — press SPACE to resume</p>
         </div>
     </main>
 </div>
