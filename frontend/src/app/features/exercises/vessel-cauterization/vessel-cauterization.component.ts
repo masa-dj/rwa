@@ -66,6 +66,8 @@ export class VesselCauterizationComponent implements OnInit, AfterViewInit, OnDe
   @Input() durationMs = EXAM_DURATION_MS;
   @Output() finished = new EventEmitter<CauterizationResult>();
   @Output() telemetry = new EventEmitter<TelemetrySnapshot>();
+  @Output() surgicalEvent = new EventEmitter<{ type: string; x?: number; y?: number; payload?: any }>();
+
   @ViewChild('canvas', { static: true }) canvasRef!: ElementRef<HTMLDivElement>;
 
   targets: Target[] = [];
@@ -218,8 +220,13 @@ export class VesselCauterizationComponent implements OnInit, AfterViewInit, OnDe
   }
 
   private sealTarget(id: string) {
+    const target = this.targets.find((t) => t.id === id);
     this.targets = this.targets.filter((t) => t.id !== id);
     this.sealedCount++;
+
+    if (target) {
+      this.surgicalEvent.emit({ type: 'target_sealed', x: target.x, y: target.y });
+    }
   }
 
   private end() {
