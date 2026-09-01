@@ -7,12 +7,14 @@ import { provideStore } from '@ngrx/store';
 import { sessionReducer } from './state/sessions/session.reducer';
 import { provideEffects } from '@ngrx/effects';
 import { SessionEffects } from './state/sessions/session.effects';
+import { examsReducer } from './state/exams/exam.reducer';
+import { ExamEffects } from './state/exams/exam.effects';
 
 export const appConfig: ApplicationConfig = {
     providers: [
         provideRouter(routes),
         provideHttpClient(withInterceptors([authInterceptor])),
-        provideStore({ sessions: sessionReducer }),
-        provideEffects([SessionEffects]),
+        provideStore({ sessions: sessionReducer, exams: examsReducer, }),
+        provideEffects([SessionEffects, ExamEffects,]),
     ],
 };
