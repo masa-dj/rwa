@@ -1,157 +1,91 @@
-.layout {
-  display: flex;
-  min-height: 100vh;
-}
-
-.layout__content {
-  flex: 1;
-  padding: 48px 56px;
-  max-width: 1200px;
-}
-
-.layout__title {
-  font-family: var(--font-display);
-  font-size: 32px;
-  font-weight: 600;
-  color: var(--color-text);
-  margin: 0;
-}
-
-.layout__subtitle {
-  font-family: var(--font-mono);
-  font-size: 13px;
-  color: var(--color-slate);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin: 4px 0 32px;
-}
-
-.table-card {
-  background: #fff;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 8px 24px;
-}
-
 .users-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: var(--font-body);
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-body);
 
-  th {
-    text-align: left;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-slate);
-    padding: 16px 12px;
-    border-bottom: 1px solid var(--color-border);
-  }
+    th {
+        text-align: left;
+        font-family: var(--font-mono);
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--color-slate);
+        padding: 16px 12px;
+        border-bottom: 1px solid var(--color-border);
+    }
 
-  td {
-    padding: 14px 12px;
-    font-size: 14px;
-    color: var(--color-text);
-  }
+    td {
+        padding: 14px 12px;
+        font-size: 14px;
+        color: var(--color-text);
+    }
 
-  tr:last-child td {
-    border-bottom: none;
-  }
+    tr:last-child td {
+        border-bottom: none;
+    }
 
-  td:last-child {
-    display: flex;
-    gap: 8px;
-  }
-}
-
-.status-badge {
-  font-family: var(--font-mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  padding: 3px 8px;
-  border-radius: var(--radius-sm);
-
-  &--pending {
-    background: var(--color-accent-soft);
-    color: #8a5a1f;
-  }
-
-  &--approved {
-    background: var(--color-green);
-    color: #2b6b46;
-  }
-
-  &--rejected {
-    background: #FBEAE4;
-    color: #B3462C;
-  }
-}
-
-.empty-state {
-  padding: 32px 0;
-  text-align: center;
-  color: var(--color-slate);
-  font-size: 14px;
+    td:last-child {
+        display: flex;
+        gap: 8px;
+    }
 }
 
 .actions-cell {
-  position: relative;
+    position: relative;
 }
 
 .menu {
-  position: relative;
-  display: inline-block;
+    position: relative;
+    display: inline-block;
 }
 
 .menu__trigger {
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
-  font-size: 18px;
-  line-height: 1;
-  padding: 6px 10px;
-  cursor: pointer;
-  color: var(--color-slate);
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    font-size: 18px;
+    line-height: 1;
+    padding: 6px 10px;
+    cursor: pointer;
+    color: var(--color-slate);
 
-  &:hover {
-    background: var(--color-paper-alt);
-    color: var(--color-text);
-  }
+    &:hover {
+        background: var(--color-paper-alt);
+        color: var(--color-text);
+    }
 }
 
 .menu__dropdown {
-  position: absolute;
-  right: 0;
-  top: calc(100% + 4px);
-  background: #fff;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  box-shadow: 0 4px 16px rgba(23, 27, 33, 0.1);
-  min-width: 120px;
-  z-index: 10;
-  overflow: hidden;
+    position: fixed;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    box-shadow: 0 4px 16px rgba(23, 27, 33, 0.1);
+    min-width: 120px;
+    z-index: 100;
+    overflow: hidden;
 }
 
 .menu__item {
-  display: block;
-  width: 100%;
-  text-align: left;
-  padding: 10px 14px;
-  background: none;
-  border: none;
-  font-family: var(--font-body);
-  font-size: 13px;
-  color: var(--color-text);
-  cursor: pointer;
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 10px 14px;
+    background: none;
+    border: none;
+    font-family: var(--font-body);
+    font-size: 13px;
+    color: var(--color-text);
+    cursor: pointer;
 
-  &:hover {
-    background: var(--color-paper-alt);
-  }
+    &:hover {
+        background: var(--color-paper-alt);
+    }
 
-  &--danger {
-    color: #B3462C;
-    &:hover { background: #FBEAE4; }
-  }
+    &--danger {
+        color: #b3462c;
+        &:hover {
+            background: #fbeae4;
+        }
+    }
 }

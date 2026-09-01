@@ -1,9 +1,12 @@
 <div class="activity-log">
-  <div *ngFor="let user of users$ | async" class="activity-row">
-    <span class="status-dot" [class.active]="user.status === 'active'"></span>
-    <span class="name">{{ user.name }}</span>
-    <span class="status-text">
-      {{ user.status === 'active' ? 'Active' : timeAgo(user.lastSeenAt) }}
-    </span>
-  </div>
+    <div *ngFor="let user of users$ | async" class="activity-row">
+        <span
+            class="status-dot"
+            [class.active]="user.status === 'active'"
+        ></span>
+        <span class="name">{{ user.name }}</span>
+        <span class="status-text">
+            {{ user.status === "active" ? "Active" : timeAgo(user.lastSeenAt) }}
+        </span>
+    </div>
 </div>

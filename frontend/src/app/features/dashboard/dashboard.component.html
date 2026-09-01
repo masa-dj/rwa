@@ -1,18 +1,27 @@
 <div class="layout">
-  <app-sidebar></app-sidebar>
+    <app-sidebar></app-sidebar>
 
-  <main class="layout__content" *ngIf="user">
-    <h1 class="layout__title">Welcome, {{ user.firstName }} {{ user.lastName }}</h1>
-    <p class="layout__subtitle">{{ user.role }}</p>
+    <main class="layout__content" *ngIf="user">
+        <div class="layout__header">
+            <div>
+                <h1 class="layout__title">
+                    Welcome, {{ user.firstName }} {{ user.lastName }}
+                </h1>
+                <p class="layout__subtitle">{{ user.role }}</p>
+            </div>
+        </div>
+        <div class="layout__grid">
+            <section class="layout__main">
+                <app-calendar [exams]="(exams$ | async) ?? []"></app-calendar>
+                <app-activity-log
+                    *ngIf="user.role === 'supervisor'"
+                ></app-activity-log>
+            </section>
 
-    <div class="layout__grid">
-      <section class="layout__main">
-      </section>
-
-      <aside class="layout__aside">
-        <app-calendar [exams]="exams"></app-calendar>
-        <app-activity-log *ngIf="user.role === 'supervisor'"></app-activity-log>
-      </aside>
-    </div>
-  </main>
+            <aside class="layout__aside">
+                <span class="upcoming-exam__label">Upcoming exams</span>
+                <app-upcoming-exam></app-upcoming-exam>
+            </aside>
+        </div>
+    </main>
 </div>

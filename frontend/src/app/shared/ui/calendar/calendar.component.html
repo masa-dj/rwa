@@ -1,34 +1,49 @@
 <div class="calendar">
-  <div class="calendar__header">
-    <span class="calendar__month">{{ monthLabel }}</span>
-    <div class="calendar__nav">
-      <app-button variant="ghost" (clicked)="prevMonth()">&larr;</app-button>
-      <app-button variant="ghost" (clicked)="nextMonth()">&rarr;</app-button>
-    </div>
-  </div>
-
-  <div class="calendar__grid calendar__grid--labels">
-    <span *ngFor="let d of weekdayLabels">{{ d }}</span>
-  </div>
-
-  <div class="calendar__grid" *ngFor="let week of weeks">
-    <span
-      *ngFor="let day of week"
-      class="calendar__day"
-      [class.is-muted]="!day.isCurrentMonth"
-      [class.is-today]="day.isToday"
-      [class.has-exam]="day.exams.length > 0"
-    >
-      {{ day.date }}
-      <span class="calendar__dot" *ngIf="day.exams.length > 0"></span>
-
-      <div class="calendar__tooltip" *ngIf="day.exams.length > 0">
-        <div class="calendar__tooltip-row" *ngFor="let exam of day.exams">
-          <span class="calendar__tooltip-time">{{ formatTime(exam.scheduledAt) }}</span>
-          <span class="calendar__tooltip-type">{{ exerciseLabels[exam.exerciseType] ?? exam.exerciseType }}</span>
-          <span class="calendar__tooltip-type">{{ exam.studentId }}</span>
+    <div class="calendar__header">
+        <div class="calendar__nav">
+            <app-button variant="ghost" (clicked)="prevMonth()"
+                >&larr;</app-button
+            >
+            <span class="calendar__month">{{ monthLabel }}</span>
+            <app-button variant="ghost" (clicked)="nextMonth()"
+                >&rarr;</app-button
+            >
         </div>
-      </div>
-    </span>
-  </div>
+    </div>
+
+    <div class="calendar__grid calendar__grid--labels">
+        <span *ngFor="let d of weekdayLabels">{{ d }}</span>
+    </div>
+
+    <div class="calendar__grid" *ngFor="let week of weeks">
+        <span
+            *ngFor="let day of week"
+            class="calendar__day"
+            [class.is-muted]="!day.isCurrentMonth"
+            [class.is-today]="day.isToday"
+            [class.has-exam]="day.exams.length > 0"
+        >
+            {{ day.date }}
+            <span class="calendar__dot" *ngIf="day.exams.length > 0"></span>
+
+            <div class="calendar__tooltip" *ngIf="day.exams.length > 0">
+                <div
+                    class="calendar__tooltip-row"
+                    *ngFor="let exam of day.exams"
+                >
+                    <span class="calendar__tooltip-time">{{
+                        formatTime(exam.scheduledAt)
+                    }}</span>
+                    <span class="calendar__tooltip-type">{{
+                        exerciseLabel(exam)
+                    }}</span>
+                    <span
+                        class="calendar__tooltip-student"
+                        *ngIf="studentName(exam)"
+                        >{{ studentName(exam) }}</span
+                    >
+                </div>
+            </div>
+        </span>
+    </div>
 </div>

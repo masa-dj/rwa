@@ -1,30 +1,119 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600;700&family=Montserrat:ital,wght@0,300..900;1,300..900&display=swap");
 
 :root {
-  --color-ink: #003459;
-  --color-paper: #faf9f6;
-  --color-paper-alt: #f4f2ec;
-  --color-slate: #6B7280;
-  --color-border: #E2DDD3;
-  --color-accent: #37AEBE;
-  --color-text: #1F2328;
-  --color-text-inverse: #faf9f6;
+    --color-ink: #003459;
+    --color-paper: #faf9f6;
+    --color-paper-alt: #f4f2ec;
+    --color-slate: #6b7280;
+    --color-border: #e2ddd3;
+    --color-accent: #37aebe;
+    --color-text: #1f2328;
+    --color-text-inverse: #faf9f6;
 
-  --color-green : #B6D094;
-  --color-red: #e87461;
+    --color-green: #b6d094;
+    --color-red: #e87461;
 
-  --font-display: 'Montserrat', sans-serif;
-  --font-body: 'Montserrat', sans-serif;
-  --font-mono: 'Montserrat', sans-serif;
+    --font-display: "Montserrat", sans-serif;
+    --font-body: "Montserrat", sans-serif;
+    --font-mono: "Montserrat", sans-serif;
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 16px;
 }
 
 body {
-  margin: 0;
-  font-family: var(--font-body);
-  background: var(--color-paper);
-  color: var(--color-text);
+    margin: 0;
+    font-family: var(--font-body);
+    background: var(--color-paper);
+    color: var(--color-text);
+}
+
+.layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+.layout__content {
+    flex: 1;
+    padding: 48px 56px;
+    max-width: 1000px;
+}
+
+.layout__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 32px;
+}
+
+.layout__title {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+}
+
+.layout__subtitle {
+    font-size: 14px;
+    color: var(--color-slate);
+    letter-spacing: 0.05em;
+    margin: 4px 0 0;
+}
+
+.table-card {
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 8px 24px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.status-badge {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    padding: 3px 8px;
+    border-radius: var(--radius-sm);
+    font-weight: bold;
+
+    &--scheduled {
+        color: #89adc2;
+    }
+    &--in_progress {
+        color: #f1d469;
+    }
+    &--ready_check {
+        color: #6be1e3;
+    }
+    &--completed {
+        color: #9db57d;
+    }
+    &--aborted {
+        color: #cb5132;
+    }
+    &--missed {
+        color: #737171;
+    }
+    //account approval
+    &--pending {
+        background: var(--color-accent-soft);
+        color: #8a5a1f;
+    }
+    &--approved {
+        background: var(--color-green);
+        color: #2b6b46;
+    }
+    &--rejected {
+        background: #fbeae4;
+        color: #b3462c;
+    }
+}
+
+.empty-state {
+    padding: 32px 0;
+    text-align: center;
+    color: var(--color-slate);
+    font-size: 14px;
 }
