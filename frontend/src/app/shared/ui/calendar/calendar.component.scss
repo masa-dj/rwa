@@ -1,111 +1,135 @@
 .calendar {
-  background: #fff;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  font-family: var(--font-body);
-  max-width: 320px;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    max-width: 320px;
 }
 
-.calendar__header { display: flex; align-items: center; justify-content: center; margin-bottom: 16px;}
+.calendar__header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
 
 .calendar__month {
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--color-text);
-  display: inline-block;
-  width: 140px;
-  text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--color-text);
+    display: inline-block;
+    width: 140px;
+    text-align: center;
 }
 
-.calendar__nav { display: flex; gap: 4px; align-items: center;; justify-content: space-between;}
+.calendar__nav {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    justify-content: space-between;
+}
 
-.calendar__grid { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; }
+.calendar__grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+}
 
 .calendar__grid--labels span {
-  font-size: 11px;
-  font-family: var(--font-mono);
-  color: var(--color-slate);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding-bottom: 8px;
+    font-size: 11px;
+    color: var(--color-slate);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding-bottom: 8px;
 }
 
 .calendar__day {
-  padding: 8px 0;
-  font-size: 14px;
-  color: var(--color-text);
-  border-radius: var(--radius-sm);
-  position: relative;
-  &.is-muted { color: var(--color-border); }
-  &.is-today { background: var(--color-accent); color: var(--color-ink); font-weight: 600; }
+    padding: 8px 0;
+    font-size: 14px;
+    color: var(--color-text);
+    border-radius: var(--radius-sm);
+    position: relative;
+    &.is-muted {
+        color: var(--color-border);
+    }
+    &.is-today {
+        background: var(--color-accent);
+        color: var(--color-ink);
+        font-weight: 600;
+    }
 }
 
 .calendar__dot {
-  position: absolute;
-  bottom: 2px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: var(--color-accent);
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--color-accent);
 }
 
 .calendar__day.has-exam {
-  font-weight: 600;
-  cursor: default;
+    font-weight: 600;
+    cursor: default;
 }
 
 .calendar__day.is-today.has-exam .calendar__dot {
-  background: var(--color-ink); // stays visible against the orange "today" background
+    background: var(
+        --color-ink
+    );
 }
 
 .calendar__tooltip {
-  position: absolute;
-  bottom: calc(100% + 6px);
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--color-ink);
-  border-radius: var(--radius-sm);
-  padding: 8px 10px;
-  min-width: 140px;
-  z-index: 20;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.12s ease;
-  box-shadow: 0 6px 20px rgba(23, 27, 33, 0.25);
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--color-ink);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    min-width: 140px;
+    z-index: 20;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.12s ease;
+    box-shadow: 0 6px 20px rgba(23, 27, 33, 0.25);
 }
 
 .calendar__day.has-exam:hover .calendar__tooltip {
-  opacity: 1;
+    opacity: 1;
 }
 
 .calendar__tooltip-row {
-  display: flex;
-  flex-direction: column;
-  text-align: left;
-  padding: 3px 0;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 3px 0;
 
-  & + & {
-    border-top: 1px solid rgba(248, 246, 242, 0.12);
-    margin-top: 3px;
-    padding-top: 6px;
-  }
+    & + & {
+        border-top: 1px solid rgba(248, 246, 242, 0.12);
+        margin-top: 3px;
+        padding-top: 6px;
+    }
 }
 
 .calendar__tooltip-time {
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: var(--color-accent);
-  text-transform: uppercase;
+    font-size: 12px;
+    color: var(--color-accent);
+    text-transform: uppercase;
 }
 
 .calendar__tooltip-type {
-  font-family: var(--font-body);
-  font-size: 12px;
-  color: var(--color-text-inverse);
-  font-weight: 500;
-  white-space: nowrap;
+    font-size: 12px;
+    color: var(--color-text-inverse);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.calendar__tooltip-student {
+    color: white;
+    font-weight: 300;
+    white-space: nowrap;
+    font-size: 12px;
 }

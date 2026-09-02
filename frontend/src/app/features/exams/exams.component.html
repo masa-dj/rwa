@@ -1,48 +1,90 @@
 <div class="layout">
-  <app-sidebar></app-sidebar>
+    <app-sidebar></app-sidebar>
 
-  <main class="layout__content">
-    <div class="layout__header">
-      <div>
-        <h1 class="layout__title">Exams</h1>
-        <p class="layout__subtitle">{{ isSupervisor ? 'Scheduled and past exams' : 'Your exams' }}</p>
-      </div>
+    <main class="layout__content">
+        <div class="layout__header">
+            <div>
+                <h1 class="layout__title">Exams</h1>
+                <p class="layout__subtitle">
+                    {{
+                        isSupervisor ? "Scheduled and past exams" : "Your exams"
+                    }}
+                </p>
+            </div>
 
-      <app-button *ngIf="isSupervisor" variant="primary" (clicked)="scheduleExam()">
-        Schedule Exam
-      </app-button>
-    </div>
+            <app-button
+                *ngIf="isSupervisor"
+                variant="primary"
+                (clicked)="scheduleExam()"
+            >
+                Schedule Exam
+            </app-button>
+        </div>
 
-    <div class="table-card" *ngIf="!loading">
-      <table class="exams-table" *ngIf="exams.length > 0">
-        <thead>
-          <tr>
-            <th>Exercise</th>
-            <th>Scheduled</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let e of exams">
-            <td>{{ exerciseLabels[e.exerciseType] }}</td>
-            <td>{{ e.scheduledAt | date: 'MMM d, y · h:mm a' }}</td>
-            <td><span class="status-badge" [class]="'status-badge--' + e.status">{{ e.status }}</span></td>
-            <td>
-              <ng-container *ngIf="isSupervisor">
-                <app-button *ngIf="canOpenRoom(e)" variant="primary" (clicked)="openRoom(e)">Start</app-button>
-                <app-button *ngIf="canEnterAsSupervisor(e)" variant="secondary" (clicked)="enterRoom(e)">Enter Room</app-button>
-                <app-button *ngIf="canGrade(e)" variant="secondary" (clicked)="gradeExam(e)">Grade</app-button>
-              </ng-container>
-              <app-button *ngIf="!isSupervisor && canJoinAsStudent(e)" variant="primary" (clicked)="enterRoom(e)">Join</app-button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <div class="table-card" *ngIf="loaded$ | async">
+            <table class="exams-table" *ngIf="(exams$ | async) as exams">
+                <thead>
+                    <tr>
+                        <th>Exercise</th>
+                        <th>Scheduled</th>
+                        <th *ngIf="isSupervisor">Student</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let e of exams">
+                        <td>{{ exerciseLabels[e.exerciseType] }}</td>
+                        <td>
+                            {{ e.scheduledAt | date : "MMM d, y · HH:mm" }}
+                        </td>
+                        <td *ngIf="isSupervisor">{{ e.student?.firstName }} {{ e.student?.lastName }}</td>
+                        <td>
+                            <span
+                                class="status-badge"
+                                [class]="'status-badge--' + e.status"
+                                >{{ e.status }}</span
+                            >
+                        </td>
+                        <td>
+                            <ng-container *ngIf="isSupervisor">
+                                <app-button
+                                    *ngIf="canOpenRoom(e)"
+                                    variant="primary"
+                                    (clicked)="openRoom(e)"
+                                    >Start</app-button
+                                >
+                                <app-button
+                                    *ngIf="canEnterAsSupervisor(e)"
+                                    variant="secondary"
+                                    (clicked)="enterRoom(e)"
+                                    >Enter Room</app-button
+                                >
+                                <app-button
+                                    *ngIf="canGrade(e)"
+                                    variant="secondary"
+                                    (clicked)="gradeExam(e)"
+                                    >Grade</app-button
+                                >
+                            </ng-container>
+                            <app-button
+                                *ngIf="!isSupervisor && canJoinAsStudent(e)"
+                                variant="primary"
+                                (clicked)="enterRoom(e)"
+                                >Join</app-button
+                            >
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
 
-      <p class="empty-state" *ngIf="exams.length === 0">
-        {{ isSupervisor ? 'No exams scheduled yet.' : 'No exams assigned yet.' }}
-      </p>
-    </div>
-  </main>
+            <p class="empty-state" *ngIf="(exams$ | async)?.length === 0">
+                {{
+                    isSupervisor
+                        ? "No exams scheduled yet."
+                        : "No exams assigned yet."
+                }}
+            </p>
+        </div>
+    </main>
 </div>

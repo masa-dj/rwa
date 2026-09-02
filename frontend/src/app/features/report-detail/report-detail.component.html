@@ -4,7 +4,7 @@
     <main class="layout__content" *ngIf="!loading && report">
         <h1 class="layout__title">Report</h1>
         <p class="layout__subtitle">
-            {{ report.timestamp | date : "MMM d, y · h:mm a" }}
+            {{ report.timestamp | date : "MMM d, y · HH:mm" }}
         </p>
 
         <div class="grade-summary">

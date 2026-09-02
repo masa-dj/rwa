@@ -2,9 +2,13 @@
     <app-sidebar></app-sidebar>
 
     <main class="layout__content">
-        <h1 class="layout__title">Reports</h1>
-        <p class="layout__subtitle">Exam feedback and grades</p>
+        <div class="layout__header">
+            <div>
+                <h1 class="layout__title">Reports</h1>
+                <p class="layout__subtitle">Exam feedback and grades</p>
 
+            </div>
+        </div>
         <div class="table-card" *ngIf="!loading">
             <table class="reports-table" *ngIf="reports.length > 0">
                 <thead>

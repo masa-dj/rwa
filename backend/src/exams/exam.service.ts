@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, LessThan } from 'typeorm';
 import { Exam, ExamStatus } from './exam.entity';
 import { Session, SessionMode, SessionStatus } from '../sessions/session.entity';
 import { ScheduleExamDto } from './dto/schedule-exam.dto';
@@ -17,6 +17,39 @@ export class ExamService {
         private sessionService: SessionService,
     ) {}
 
+    //find
+    async findById(id: string): Promise<Exam> {
+        const exam = await this.examRepository.findOne({ where: { id } });
+        if (!exam) throw new NotFoundException(`Exam ${id} not found`);
+        return exam;
+    }
+
+    async findAllForStudent(studentId: string): Promise<Exam[]> {
+        await this.sweepMissedExams();
+        return this.examRepository.find({
+            where: { studentId },
+            order: { scheduledAt: 'DESC' },
+        });
+    }
+
+    async findAllForSupervisor(supervisorId: string): Promise<Exam[]> {
+        await this.sweepMissedExams();
+        return this.examRepository.find({
+            where: { supervisorId },
+            relations: ['student'],
+            order: { scheduledAt: 'DESC' },
+        });
+    }
+
+    async findAll(): Promise<Exam[]> {
+        await this.sweepMissedExams();
+        return this.examRepository.find({
+            relations: ['student'],
+            order: { scheduledAt: 'DESC' },
+        });
+    }
+
+    //exam
     async schedule(supervisorId: string, dto: ScheduleExamDto): Promise<Exam> {
         const exam = this.examRepository.create({
             studentId: dto.studentId,
@@ -62,30 +95,6 @@ export class ExamService {
         return this.examRepository.save(exam);
     }
 
-    async findById(id: string): Promise<Exam> {
-        const exam = await this.examRepository.findOne({ where: { id } });
-        if (!exam) throw new NotFoundException(`Exam ${id} not found`);
-        return exam;
-    }
-
-    async findAllForStudent(studentId: string): Promise<Exam[]> {
-        return this.examRepository.find({
-            where: { studentId },
-            order: { scheduledAt: 'DESC' },
-        });
-    }
-
-    async findAllForSupervisor(supervisorId: string): Promise<Exam[]> {
-        return this.examRepository.find({
-            where: { supervisorId },
-            order: { scheduledAt: 'DESC' },
-        });
-    }
-
-    async findAll(): Promise<Exam[]> {
-        return this.examRepository.find({ order: { scheduledAt: 'DESC' } });
-    }
-
     async complete(examId: string, dto: CompleteExamDto): Promise<Exam> {
         const exam = await this.findById(examId);
 
@@ -118,6 +127,20 @@ export class ExamService {
         return this.examRepository.save(exam);
     }
 
+    async finish(examId: string): Promise<Exam> {
+        const exam = await this.findById(examId);
+        if (exam.status !== ExamStatus.IN_PROGRESS) {
+            throw new BadRequestException(`Exam is already ${exam.status}`);
+        }
+        if (!exam.sessionId) {
+            throw new BadRequestException('Exam has no active session to finish');
+        }
+
+        await this.sessionService.finish(exam.sessionId);
+        exam.status = ExamStatus.COMPLETED;
+        return this.examRepository.save(exam);
+    }
+
     async openRoom(examId: string, supervisorId: string): Promise<Exam> {
         const exam = await this.findById(examId);
         if (exam.supervisorId !== supervisorId) {
@@ -137,17 +160,15 @@ export class ExamService {
         return this.examRepository.save(exam);
     }
 
-    async finish(examId: string): Promise<Exam> {
-        const exam = await this.findById(examId);
-        if (exam.status !== ExamStatus.IN_PROGRESS) {
-            throw new BadRequestException(`Exam is already ${exam.status}`);
-        }
-        if (!exam.sessionId) {
-            throw new BadRequestException('Exam has no active session to finish');
-        }
+    private async sweepMissedExams(): Promise<void> {
+        const cutoff = new Date(Date.now() - 15 * 60 * 1000);
+        const staleExams = await this.examRepository.find({
+            where: { status: ExamStatus.SCHEDULED, scheduledAt: LessThan(cutoff) },
+        });
 
-        await this.sessionService.finish(exam.sessionId);
-        exam.status = ExamStatus.COMPLETED;
-        return this.examRepository.save(exam);
+        if (staleExams.length === 0) return;
+
+        staleExams.forEach((exam) => (exam.status = ExamStatus.MISSED));
+        await this.examRepository.save(staleExams);
     }
 }

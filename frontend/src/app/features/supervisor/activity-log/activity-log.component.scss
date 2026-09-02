@@ -1,48 +1,49 @@
 .activity-log {
-  background: #fff;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-lg);
-  padding: 20px;
-  font-family: var(--font-body);
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 20px;
+    margin-top: 32px;
+    width: 320px;
 }
 
 .activity-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--color-paper-alt);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-paper-alt);
 
-  &:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-  }
+    &:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
 
-  &:first-child {
-    padding-top: 0;
-  }
+    &:first-child {
+        padding-top: 0;
+    }
 }
 
 .status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--color-border);
-  flex-shrink: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-border);
+    flex-shrink: 0;
 
-  &.active {
-    background: var(--color-green);
-  }
+    &.active {
+        background: var(--color-green);
+    }
 }
 
 .name {
-  font-size: 14px;
-  color: var(--color-text);
-  flex: 1;
+    font-size: 14px;
+    color: var(--color-text);
+    flex: 1;
 }
 
 .status-text {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--color-slate);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--color-slate);
 }

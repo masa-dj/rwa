@@ -1,12 +1,20 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { interval, Subscription } from 'rxjs';
+import { interval, Observable, Subscription } from 'rxjs';
 import { ExamService, Exam } from '../../core/services/exam.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SidebarComponent } from '../../shared/ui/sidebar/sidebar.component';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
 import { ReportService } from '../../core/services/report.service';
+import { ExamsState } from '../../state/exams/exam.reducer';
+import * as ExamActions from '../../state/exams/exam.actions';
+import { Store } from '@ngrx/store';
+import { selectAllExamsSorted, selectExamsLoaded } from '../../state/exams/exam.selectors';
+
+interface AppState {
+    exams: ExamsState;
+}
 
 @Component({
     selector: 'app-exams',
@@ -17,9 +25,9 @@ import { ReportService } from '../../core/services/report.service';
 })
 export class ExamsComponent implements OnInit, OnDestroy {
     isSupervisor = false;
-    exams: Exam[] = [];
+    exams$: Observable<Exam[]>;
     reportedExamIds = new Set<string>();
-    loading = true;
+    loaded$: Observable<boolean>;
     now = new Date();
 
     exerciseLabels: Record<string, string> = {
@@ -29,50 +37,45 @@ export class ExamsComponent implements OnInit, OnDestroy {
     };
 
     private tick?: Subscription;
-    private examsPoll?: Subscription;
+    private reportsPoll?: Subscription;
 
     constructor(
         private examService: ExamService,
         private authService: AuthService,
         private reportService: ReportService,
-        private router: Router
-    ) {}
+        private router: Router,
+        private store: Store<AppState>,
+    ) {
+        this.exams$ = this.store.select(selectAllExamsSorted);
+        this.loaded$ = this.store.select(selectExamsLoaded);
+    }
 
     ngOnInit() {
         this.isSupervisor = this.authService.getUser()?.role === 'supervisor';
-        this.load();
+        this.store.dispatch(ExamActions.loadExams());
         this.loadReportedIds();
         this.tick = interval(15000).subscribe(() => (this.now = new Date()));
-        this.examsPoll = interval(5000).subscribe(() => {
-            this.load();
-            this.loadReportedIds();
-        });
+        this.reportsPoll = interval(5000).subscribe(() => this.loadReportedIds());
     }
 
     ngOnDestroy() {
         this.tick?.unsubscribe();
-        this.examsPoll?.unsubscribe();
+        this.reportsPoll?.unsubscribe();
     }
 
-    load() {
-        const source = this.isSupervisor ? this.examService.getAll() : this.examService.getMine();
-        source.subscribe({
-          next: (exams) => {
-            this.exams = exams.sort(
-              (a, b) => new Date(b.scheduledAt).getTime() - new Date(a.scheduledAt).getTime(),
-            );
-            this.loading = false;
-          },
-          error: () => (this.loading = false),
-        });
-      }
+    //scheduling
+    scheduleExam() {
+        this.router.navigate(['/exams/schedule']);
+    }
 
+    //start exam
     canOpenRoom(exam: Exam): boolean {
         if (exam.status !== 'scheduled') return false;
-        const earliest = new Date(
-            new Date(exam.scheduledAt).getTime() - 15 * 60 * 1000
-        );
-        return this.now >= earliest;
+        const scheduledTime = new Date(exam.scheduledAt).getTime();
+        const earliest = scheduledTime - 15 * 60 * 1000;
+        const latest = scheduledTime + 15 * 60 * 1000;
+        const nowMs = this.now.getTime();
+        return nowMs >= earliest && nowMs <= latest;
     }
 
     canEnterAsSupervisor(exam: Exam): boolean {
@@ -98,23 +101,21 @@ export class ExamsComponent implements OnInit, OnDestroy {
         this.router.navigate(['/exams', exam.id, 'room']);
     }
 
-    scheduleExam() {
-        this.router.navigate(['/exams/schedule']);
-    }
+    //reports and grading
     private loadReportedIds() {
         if (!this.isSupervisor) return;
         this.reportService.getMine().subscribe((reports) => {
-          this.reportedExamIds = new Set(reports.map((r) => r.examId));
+        this.reportedExamIds = new Set(reports.map((r) => r.examId));
         });
-      }
+    }
 
-      canGrade(exam: Exam): boolean {
+    canGrade(exam: Exam): boolean {
         return this.isSupervisor && exam.status === 'completed' && !this.reportedExamIds.has(exam.id);
-      }
+    }
 
-      gradeExam(exam: Exam) {
+    gradeExam(exam: Exam) {
         this.reportService.create(exam.id).subscribe((report) => {
-          this.router.navigate(['/reports', report.id]);
+            this.router.navigate(['/reports', report.id]);
         });
-      }
+    }
 }

@@ -1,15 +1,24 @@
-<div class="upcoming-exam" *ngIf="!loading">
-  <ng-container *ngIf="nextExam; else empty">
-    <span class="upcoming-exam__label">Upcoming Exam</span>
-    <span class="upcoming-exam__exercise">{{ exerciseLabels[nextExam.exerciseType] }}</span>
-    <span class="upcoming-exam__time">{{ nextExam.scheduledAt | date: 'MMM d, y · h:mm a' }}</span>
-    <span class="upcoming-exam__status" [class]="'is-' + nextExam.status">{{ nextExam.status }}</span>
-  </ng-container>
+<div class="upcoming-exam">
+    <ng-container *ngIf="upcomingExams$ | async as exams">
+        <ng-container *ngIf="exams.length > 0; else empty">
+            <div class="upcoming-exam__item" *ngFor="let exam of exams">
+                <span class="upcoming-exam__exercise">{{
+                    exerciseLabels[exam.exerciseType]
+                }}</span>
+                <span class="upcoming-exam__time">{{
+                    exam.scheduledAt | date : "d MMM, y · HH:mm"
+                }}</span>
+            </div>
+        </ng-container>
 
-  <ng-template #empty>
-    <span class="upcoming-exam__label">Upcoming Exam</span>
-    <p class="upcoming-exam__none">
-      {{ isSupervisor ? 'No exams scheduled.' : 'No exam scheduled yet.' }}
-    </p>
-  </ng-template>
+        <ng-template #empty>
+            <p class="upcoming-exam__none">
+                {{
+                    isSupervisor
+                        ? "No exams scheduled."
+                        : "No exam scheduled yet."
+                }}
+            </p>
+        </ng-template>
+    </ng-container>
 </div>
