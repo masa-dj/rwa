@@ -15,3 +15,11 @@ export const selectAllExamsSorted = createSelector(selectAllExams, (exams) => {
 });
 
 export const selectExamsLoaded = createSelector(selectExamsState, (s) => s.loaded);
+
+export const selectUpcomingExams = createSelector(selectAllExams, (exams) => {
+    const now = Date.now();
+    return exams
+        .filter((e) => e.status === 'scheduled' && new Date(e.scheduledAt).getTime() >= now)
+        .sort((a, b) => new Date(a.scheduledAt).getTime() - new Date(b.scheduledAt).getTime())
+        .slice(0, 3);
+});

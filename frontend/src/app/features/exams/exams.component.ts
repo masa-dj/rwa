@@ -10,7 +10,7 @@ import { ReportService } from '../../core/services/report.service';
 import { ExamsState } from '../../state/exams/exam.reducer';
 import * as ExamActions from '../../state/exams/exam.actions';
 import { Store } from '@ngrx/store';
-import { selectAllExamsSorted, selectExamsLoaded, selectExamsLoading } from '../../state/exams/exam.selectors';
+import { selectAllExamsSorted, selectExamsLoaded } from '../../state/exams/exam.selectors';
 
 interface AppState {
     exams: ExamsState;

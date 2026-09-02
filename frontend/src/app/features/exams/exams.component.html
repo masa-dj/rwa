@@ -36,7 +36,7 @@
                     <tr *ngFor="let e of exams">
                         <td>{{ exerciseLabels[e.exerciseType] }}</td>
                         <td>
-                            {{ e.scheduledAt | date : "MMM d, y · h:mm a" }}
+                            {{ e.scheduledAt | date : "MMM d, y · HH:mm" }}
                         </td>
                         <td *ngIf="isSupervisor">{{ e.student?.firstName }} {{ e.student?.lastName }}</td>
                         <td>

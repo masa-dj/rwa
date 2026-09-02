@@ -1,7 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ExamService, Exam } from '../../../core/services/exam.service';
+import { Exam } from '../../../core/services/exam.service';
 import { AuthService } from '../../../core/services/auth.service';
+import * as ExamActions from '../../../state/exams/exam.actions';
+import { selectUpcomingExams } from '../../../state/exams/exam.selectors';
+import { ExamsState } from '../../../state/exams/exam.reducer';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+
+interface AppState {
+    exams: ExamsState;
+}
 
 @Component({
     selector: 'app-upcoming-exam',
@@ -12,8 +21,7 @@ import { AuthService } from '../../../core/services/auth.service';
 })
 export class UpcomingExamComponent implements OnInit {
     isSupervisor = false;
-    nextExam: Exam | null = null;
-    loading = true;
+    upcomingExams$: Observable<Exam[]>;
 
     exerciseLabels: Record<string, string> = {
         steady_path: 'Steady Path',
@@ -22,31 +30,14 @@ export class UpcomingExamComponent implements OnInit {
     };
 
     constructor(
-        private examService: ExamService,
-        private authService: AuthService
-    ) {}
+        private authService: AuthService,
+        private store: Store<AppState>,
+    ) {
+        this.upcomingExams$ = this.store.select(selectUpcomingExams);
+    }
 
     ngOnInit() {
         this.isSupervisor = this.authService.getUser()?.role === 'supervisor';
-
-        this.examService.getMine().subscribe({
-            next: (exams) => {
-                const upcoming = exams
-                    .filter(
-                        (e) =>
-                            e.status === 'scheduled' ||
-                            e.status === 'in_progress'
-                    )
-                    .sort(
-                        (a, b) =>
-                            new Date(a.scheduledAt).getTime() -
-                            new Date(b.scheduledAt).getTime()
-                    );
-
-                this.nextExam = upcoming[0] ?? null;
-                this.loading = false;
-            },
-            error: () => (this.loading = false),
-        });
+        this.store.dispatch(ExamActions.loadExams());
     }
 }
