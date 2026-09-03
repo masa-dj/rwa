@@ -8,9 +8,8 @@ import { SidebarComponent } from '../../shared/ui/sidebar/sidebar.component';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
 import {
     VesselCauterizationComponent,
-    CauterizationResult,
-    TelemetrySnapshot,
 } from '../exercises/vessel-cauterization/vessel-cauterization.component';
+import { VesselCauterizationTelemetrySnapshot, CauterizationResult } from '../exercises/vessel-cauterization/vessel-cauterization.constants';
 import { VesselCauterizationLiveViewComponent } from '../exercises/vessel-cauterization-live-view/vessel-cauterization-live-view.component';
 import {
     SteadyPathComponent,
@@ -55,7 +54,7 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
     myReady = false;
     errorMessage = '';
     endedMessage = '';
-    latestVCTelemetry: TelemetrySnapshot | null = null;
+    latestVCTelemetry: VesselCauterizationTelemetrySnapshot | null = null;
     latestSteadyPathTelemetry: SteadyPathTelemetrySnapshot | null = null;
     latestTimedSutureTelemetry: TimedSutureTelemetrySnapshot | null = null;
     isFrozen = false;
@@ -227,7 +226,7 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
         this.socket?.emit('exam:abort');
     }
 
-    onTelemetry(snapshot: TelemetrySnapshot) {
+    onTelemetry(snapshot: VesselCauterizationTelemetrySnapshot) {
         console.log('[student] sending telemetry', snapshot);
         this.socket?.emit('exam:telemetry', snapshot);
     }

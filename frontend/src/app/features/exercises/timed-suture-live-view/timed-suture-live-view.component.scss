@@ -28,7 +28,7 @@
     position: relative;
     width: 560px;
     height: 360px;
-    background: var(--color-ink);
+    background: #5c1801;
     border-radius: var(--radius-lg);
     overflow: hidden;
 }
@@ -37,12 +37,12 @@
     height: 100%;
 }
 .wound-line {
-    stroke: rgba(248, 246, 242, 0.15);
+    stroke: white;
     stroke-width: 2;
     stroke-dasharray: 6 4;
 }
 .stitch__corridor {
-    stroke: rgba(232, 163, 61, 0.35);
+    stroke: rgba(232, 127, 61, 0.18);
     stroke-width: 32;
     stroke-linecap: round;
     transition: stroke 0.1s ease;
@@ -51,17 +51,17 @@
     }
 }
 .stitch__point {
-    fill: rgba(248, 246, 242, 0.15);
-    stroke: rgba(248, 246, 242, 0.3);
+    fill: white;
+    stroke: gray;
     stroke-width: 1.5;
     transition: fill 0.15s ease, stroke 0.15s ease;
     &.is-active {
-        fill: var(--color-accent-soft);
-        stroke: var(--color-accent);
+        fill: rgba(232, 61, 61, 0.318);
+        stroke: #a32900;
     }
     &.is-completed {
-        fill: var(--color-moss-soft);
-        stroke: var(--color-moss);
+        fill: rgb(160, 184, 125);
+        stroke: green;
     }
     &.is-missed {
         fill: #fbeae4;

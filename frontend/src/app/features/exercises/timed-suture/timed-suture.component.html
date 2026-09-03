@@ -47,7 +47,7 @@
                 <g *ngIf="i === activeIndex" class="key-callout">
                     <rect
                         [attr.x]="(s.entry.x + s.exit.x) / 2 - 34"
-                        [attr.y]="Math.min(s.entry.y, s.exit.y) - 46"
+                        [attr.y]="Math.min(s.entry.y, s.exit.y) - 60"
                         width="68"
                         height="28"
                         rx="6"
@@ -56,7 +56,7 @@
                     />
                     <text
                         [attr.x]="(s.entry.x + s.exit.x) / 2"
-                        [attr.y]="Math.min(s.entry.y, s.exit.y) - 27"
+                        [attr.y]="Math.min(s.entry.y, s.exit.y) - 40"
                         text-anchor="middle"
                         class="key-callout__text"
                         [class.is-held]="isKeyHeld"
