@@ -21,7 +21,7 @@
             </ng-container>
 
             <ng-template #checkSteadyPath>
-                <ng-container *ngIf="isSteadyPath; else genericRoom">
+                <ng-container *ngIf="isSteadyPath; else checkTimedSuture">
                     <p class="exercise-label">
                         {{ exerciseLabels[session.exerciseType] }}
                     </p>
@@ -34,8 +34,10 @@
                         >
                     </div>
                 </ng-container>
+            </ng-template>
 
-                <ng-container *ngIf="isTimedSuture">
+            <ng-template #checkTimedSuture>
+                <ng-container *ngIf="isTimedSuture; else genericRoom">
                     <p class="exercise-label">
                         {{ exerciseLabels[session.exerciseType] }}
                     </p>
@@ -48,23 +50,23 @@
                         >
                     </div>
                 </ng-container>
+            </ng-template>
 
-                <ng-template #genericRoom>
-                    <div class="room-card">
-                        <span class="room-card__label">{{
-                            exerciseLabels[session.exerciseType]
-                        }}</span>
-                        <p class="room-card__status">In progress</p>
-                        <div class="room-card__actions">
-                            <app-button variant="secondary" (clicked)="abort()"
-                                >Abort</app-button
-                            >
-                            <app-button variant="primary" (clicked)="finish()"
-                                >Finish</app-button
-                            >
-                        </div>
+            <ng-template #genericRoom>
+                <div class="room-card">
+                    <span class="room-card__label">{{
+                        exerciseLabels[session.exerciseType]
+                    }}</span>
+                    <p class="room-card__status">In progress</p>
+                    <div class="room-card__actions">
+                        <app-button variant="secondary" (clicked)="abort()"
+                            >Abort</app-button
+                        >
+                        <app-button variant="primary" (clicked)="finish()"
+                            >Finish</app-button
+                        >
                     </div>
-                </ng-template>
+                </div>
             </ng-template>
         </ng-container>
 

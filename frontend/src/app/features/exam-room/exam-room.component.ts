@@ -61,6 +61,7 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
     isShaking = false;
     tremorUsesLeft = 1;
     freezeUsesLeft = 1;
+    tremorSignal = 0;
 
     private socket: Socket | null = null;
 
@@ -165,6 +166,7 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
         this.socket.on('exam:tremor', () => {
             this.isShaking = true;
             this.tremorUsesLeft = 0;
+            this.tremorSignal++;
             setTimeout(() => (this.isShaking = false), 2000);
         });
 
@@ -237,7 +239,7 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
         );
         this.socket?.emit('exam:finish', {
             precisionScore: score,
-            tremorIndex: 0,
+            tremorIndex: result.tremorIndex,
             score,
         });
     }

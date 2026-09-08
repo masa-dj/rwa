@@ -37,4 +37,15 @@ export class SurgicalEventService {
     async countByType(sessionId: string, type: string): Promise<number> {
         return this.surgicalEventRepository.count({ where: { sessionId, type } });
     }
+
+    async getFreezeReactionTime(sessionId: string): Promise<number | null> {
+        const events = await this.surgicalEventRepository.find({
+            where: { sessionId },
+            order: { timestamp: 'ASC' },
+        });
+        const triggered = events.find((e) => e.type === 'freeze_triggered');
+        const acknowledged = events.find((e) => e.type === 'freeze_acknowledged');
+        if (!triggered || !acknowledged) return null;
+        return new Date(acknowledged.timestamp).getTime() - new Date(triggered.timestamp).getTime();
+    }
 }

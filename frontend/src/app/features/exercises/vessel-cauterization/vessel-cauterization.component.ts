@@ -10,7 +10,7 @@ import {
     AfterViewInit,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Subject, fromEvent, interval, merge, timer } from 'rxjs';
+import { Subject, fromEvent, interval, merge, race, timer } from 'rxjs';
 import {
     map,
     share,
@@ -19,6 +19,7 @@ import {
     takeUntil,
     withLatestFrom,
     auditTime,
+    take,
 } from 'rxjs/operators';
 import {
     CANVAS_HEIGHT,
@@ -30,6 +31,7 @@ import {
     SPAWN_INTERVAL_MS,
     TARGET_RADIUS,
     TICK_MS,
+    TREMOR_RESPONSE_WINDOW_MS,
     Target,
     VesselCauterizationTelemetrySnapshot,
 } from './vessel-cauterization.constants';
@@ -46,6 +48,9 @@ export class VesselCauterizationComponent
     implements OnInit, AfterViewInit, OnDestroy
 {
     @Input() durationMs = EXAM_DURATION_MS;
+    @Input() set tremorSignal(value: number) {
+        if (value > 0) this.tremorTriggered$.next();
+    }
     @Output() finished = new EventEmitter<CauterizationResult>();
     @Output() telemetry =
         new EventEmitter<VesselCauterizationTelemetrySnapshot>();
@@ -69,6 +74,9 @@ export class VesselCauterizationComponent
     private activeTargetId: string | null = null;
     private holdProgressMs = 0;
     private hasPointerEntered = false;
+    private tremorTriggered$ = new Subject<void>();
+    private tremorResponses: { compliant: boolean; delayMs: number }[] = [];
+    private ended = false;
 
     ngOnInit() {
         //countdown, change later if one min doesnt make sense
@@ -121,6 +129,8 @@ export class VesselCauterizationComponent
             fromEvent(el, 'pointerleave'),
             fromEvent(window, 'blur')
         );
+
+        this.setupTremorResponse(el)
 
         pointerDown$
             .pipe(
@@ -251,15 +261,38 @@ export class VesselCauterizationComponent
         }
     }
 
-    private end() {
-        this.missedCount = this.targets.length;
-        this.finished.emit({
-            sealed: this.sealedCount,
-            missed: this.missedCount,
+    private setupTremorResponse(el: HTMLDivElement) {
+        this.tremorTriggered$.pipe(takeUntil(this.destroy$)).subscribe(() => {
+          if (!this.activeTargetId) return; // not mid-hold, nothing to test
+
+          const start = Date.now();
+          race(
+            fromEvent(el, 'pointerup').pipe(map(() => true)),
+            timer(TREMOR_RESPONSE_WINDOW_MS).pipe(map(() => false)),
+          ).pipe(take(1), takeUntil(this.destroy$))
+            .subscribe((released) => {
+              this.tremorResponses.push({ compliant: released, delayMs: Date.now() - start });
+              if (!released) this.resetHold(); // force-fail: they kept dragging through the disturbance
+            });
         });
+      }
+
+      private computeTremorIndex(): number {
+        if (this.tremorResponses.length === 0) return 100; // never disturbed — no penalty
+        const scores = this.tremorResponses.map((r) =>
+          r.compliant ? Math.max(0, Math.round(100 - (r.delayMs / TREMOR_RESPONSE_WINDOW_MS) * 100)) : 0,
+        );
+        return Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+      }
+
+      private end() {
+        if (this.ended) return;
+        this.ended = true;
+        this.missedCount = this.targets.length;
+        this.finished.emit({ sealed: this.sealedCount, missed: this.missedCount, tremorIndex: this.computeTremorIndex() });
         this.destroy$.next();
         this.destroy$.complete();
-    }
+      }
 
     formatTime(ms: number): string {
         const seconds = Math.ceil(ms / 1000);

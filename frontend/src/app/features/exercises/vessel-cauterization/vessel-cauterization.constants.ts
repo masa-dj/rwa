@@ -11,6 +11,7 @@ export interface Target {
 export interface CauterizationResult {
     sealed: number;
     missed: number;
+    tremorIndex: number;
 }
 
 export interface VesselCauterizationTelemetrySnapshot {
@@ -34,3 +35,4 @@ export const TICK_MS = 50;
 export const SPAWN_INTERVAL_MS = 2950;
 export const EXAM_DURATION_MS = 30000;
 export const MAX_TARGETS = 5;
+export const TREMOR_RESPONSE_WINDOW_MS = 1500;
