@@ -56,5 +56,36 @@
             <button class="menu__item" (click)="update(openMenuId)">Update</button>
             <button class="menu__item menu__item--danger" (click)="remove(openMenuId)">Delete</button>
         </div>
+
+        <div class="modal-backdrop" *ngIf="editingUser" (click)="cancelEdit()">
+            <div class="modal-card" (click)="$event.stopPropagation()">
+                <h2 class="modal-card__title">Edit User</h2>
+
+                <form [formGroup]="editForm" (ngSubmit)="saveEdit()">
+                <label class="field">
+                    <span class="field__label">First name</span>
+                    <input type="text" formControlName="firstName" class="field__input" />
+                </label>
+
+                <label class="field">
+                    <span class="field__label">Last name</span>
+                    <input type="text" formControlName="lastName" class="field__input" />
+                </label>
+
+                <label class="field">
+                    <span class="field__label">Role</span>
+                    <select formControlName="role" class="field__input">
+                    <option value="student">Student</option>
+                    <option value="supervisor">Supervisor</option>
+                    </select>
+                </label>
+
+                <div class="modal-card__actions">
+                    <app-button variant="secondary" type="button" (clicked)="cancelEdit()">Cancel</app-button>
+                    <app-button variant="primary" type="submit" [disabled]="editForm.invalid">Save</app-button>
+                </div>
+                </form>
+            </div>
+        </div>
     </main>
 </div>

@@ -1,14 +1,15 @@
-import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../core/services/users.service';
 import { AppUser } from '../../../core/services/auth.service';
 import { SidebarComponent } from '../../../shared/ui/sidebar/sidebar.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
     selector: 'app-admin-users',
     standalone: true,
-    imports: [CommonModule, SidebarComponent, ButtonComponent],
+    imports: [CommonModule, SidebarComponent, ButtonComponent, ReactiveFormsModule],
     templateUrl: './admin-users.component.html',
     styleUrls: ['./admin-users.component.scss'],
 })
@@ -17,7 +18,16 @@ export class AdminUsersComponent implements OnInit {
     openMenuId: string | null = null;
     menuPosition = { top: 0, left: 0 };
 
-    constructor(private usersService: UsersService,  private elementRef: ElementRef) {}
+    editingUser: AppUser | null = null;
+    editForm: FormGroup;
+
+    constructor(private usersService: UsersService, private fb: FormBuilder,) {
+        this.editForm = this.fb.group({
+            firstName: ['', Validators.required],
+            lastName: ['', Validators.required],
+            role: ['', Validators.required],
+        });
+    }
 
     ngOnInit() {
         this.load();
@@ -68,8 +78,27 @@ export class AdminUsersComponent implements OnInit {
     }
 
     update(id: string) {
-        console.log('update user', id);
+        const user = this.users.find((u) => u.id === id);
+        if (!user) return;
+        this.editingUser = user;
+        this.editForm.patchValue({
+            firstName: user.firstName,
+            lastName: user.lastName,
+            role: user.role,
+        });
         this.openMenuId = null;
+    }
+
+    saveEdit() {
+        if (!this.editingUser || this.editForm.invalid) return;
+        this.usersService.update(this.editingUser.id, this.editForm.getRawValue()).subscribe(() => {
+        this.editingUser = null;
+        this.load();
+        });
+    }
+
+    cancelEdit() {
+        this.editingUser = null;
     }
 
     remove(id: string) {

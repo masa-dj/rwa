@@ -19,4 +19,8 @@ export class UsersService {
   delete(id: string) {
     return this.http.delete<AppUser[]>(`${this.api}/users/${id}`);
   }
+
+  update(id: string, dto: { firstName?: string; lastName?: string; role?: string }) {
+    return this.http.put<AppUser>(`${this.api}/users/${id}`, dto);
+  }
 }
