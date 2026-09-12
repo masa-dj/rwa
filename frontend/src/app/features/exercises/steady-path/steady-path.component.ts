@@ -42,7 +42,7 @@ const WAYPOINT_COUNT = 10;
 const TOLERANCE_RADIUS = 5;
 const SAMPLE_STEP_PX = 4;
 const TICK_MS = 50;
-const DURATION_MS = 200000;
+const DURATION_MS = 20000;
 const LOOKAHEAD_SAMPLES = 20;
 
 @Component({

@@ -1,16 +1,13 @@
 <div class="exercise">
+    <div class="exercise__info">
     <div class="exercise__hud">
-        <span class="exercise__timer">{{ formatTime(timeRemaining) }}</span>
-
-        <span class="exercise__key" [class.is-held]="isKeyHeld">
-            HOLD [ {{ currentTargetKey }} ]
-        </span>
-
-        <span class="exercise__score"
-            >Stitch {{ activeIndex + 1 }} / {{ stitches.length }}</span
-        >
+        <span class="exercise__timer">Remaining time: {{ formatTime(timeRemaining) }}</span>
+        <span class="exercise__score">Stitch {{ activeIndex + 1 }} / {{ stitches.length }}</span>
     </div>
-
+    <span class="exercise__key" [class.is-held]="isKeyHeld">
+        HOLD [ {{ currentTargetKey }} ]
+    </span>
+    </div>
     <div class="exercise__canvas" #canvas>
         <svg [attr.viewBox]="'0 0 560 360'" class="exercise__svg">
             <line x1="40" y1="180" x2="520" y2="180" class="wound-line" />

@@ -14,8 +14,6 @@
 }
 
 .room-card {
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
     padding: 24px;
     display: flex;
     flex-direction: column;
@@ -23,7 +21,6 @@
 }
 
 .room-card__label {
-    font-family: var(--font-mono);
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -31,7 +28,6 @@
 }
 
 .room-card__status {
-    font-family: var(--font-display);
     font-size: 20px;
     font-weight: 600;
     color: var(--color-moss);

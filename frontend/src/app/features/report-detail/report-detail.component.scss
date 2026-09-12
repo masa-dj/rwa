@@ -31,7 +31,6 @@
 
 .grade-summary__label {
     display: block;
-    font-family: var(--font-mono);
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -80,7 +79,6 @@
     padding: 10px 12px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
-    font-family: var(--font-body);
     font-size: 14px;
     color: var(--color-text);
 }
@@ -104,9 +102,8 @@
 }
 
 .saved-indicator {
-    font-family: var(--font-mono);
     font-size: 12px;
-    color: var(--color-moss);
+    color: var(--color-green);
 }
 
 .report-readonly__block {
@@ -145,7 +142,6 @@
 
 .chart-card__label {
     display: block;
-    font-family: var(--font-mono);
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.05em;

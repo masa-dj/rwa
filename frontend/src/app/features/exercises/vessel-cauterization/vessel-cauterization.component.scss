@@ -6,8 +6,9 @@
 
 .exercise__hud {
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
     font-size: 13px;
+    gap: 2;
 }
 
 .exercise__timer {

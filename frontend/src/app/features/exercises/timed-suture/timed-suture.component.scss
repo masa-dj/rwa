@@ -6,8 +6,8 @@
 
 .exercise__hud {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
+    gap: 2;
     font-size: 13px;
     color: var(--color-slate);
 }
@@ -30,6 +30,13 @@
         background: var(--color-green);
         color: #2b6b46;
     }
+}
+
+.exercise__info{
+    display: flex;
+    justify-content: space-between;
+    width: 560px;
+    align-items: center;
 }
 
 .exercise__canvas {

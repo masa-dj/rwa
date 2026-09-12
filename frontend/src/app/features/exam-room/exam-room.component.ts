@@ -71,7 +71,7 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
     > = {
         vessel_cauterization: {
             equipment: 'Mouse',
-            time: '1 minute',
+            time: '30 seconds',
             description:
                 'Circular vessels will appear and drift across the canvas. Hold the mouse button down over a vessel and keep it centered for 3 seconds to seal it. Losing contact resets your progress on that vessel.',
         },
@@ -82,9 +82,9 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
                 'A winding vessel will appear on the canvas. Click and drag from the start, staying inside the corridor as you trace toward the end. Drifting outside the tolerance hurts your precision score.',
         },
         timed_suture: {
-            equipment: 'Mouse',
-            time: '',
-            description: '',
+            equipment: 'Mouse and keyboard',
+            time: '20 seconds',
+            description: 'A series of suture points will appear on the canvas. Press and hold the key indicated on the screen, then click and drag from one dot to the next to complete each stitch accurately.',
         },
     };
 
