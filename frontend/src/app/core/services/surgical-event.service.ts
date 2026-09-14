@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SurgicalEvent } from '../models/app.models';
+import { APP_CONFIG } from '../config/app-config';
 
 @Injectable({ providedIn: 'root' })
 export class SurgicalEventService {
-    private api = 'http://localhost:3000';
+    private api = APP_CONFIG.apiUrl;
 
     constructor(private http: HttpClient) {}
 

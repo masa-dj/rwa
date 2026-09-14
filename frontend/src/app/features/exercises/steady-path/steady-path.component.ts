@@ -100,7 +100,7 @@ export class SteadyPathComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit() {
-        // sample the actual rendered path — must happen after view init, path needs to be in the DOM
+        //must happen after view init, path needs to be in the DOM
         const pathEl = this.pathElRef.nativeElement;
         const totalLength = pathEl.getTotalLength();
         const sampleCount = Math.ceil(totalLength / SAMPLE_STEP_PX);
