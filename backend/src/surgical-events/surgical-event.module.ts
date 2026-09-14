@@ -6,7 +6,7 @@ import { SurgicalEventController } from "./surgical-event.controller";
 import { SessionModule } from "src/sessions/session.module";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([SurgicalEvent]), SessionModule,],
+    imports: [TypeOrmModule.forFeature([SurgicalEvent]), SessionModule],
     providers: [SurgicalEventService],
     controllers: [SurgicalEventController],
     exports: [SurgicalEventService],

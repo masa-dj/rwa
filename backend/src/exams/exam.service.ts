@@ -1,12 +1,21 @@
-import { Injectable, NotFoundException, BadRequestException, ConflictException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, LessThan } from 'typeorm';
-import { Exam, ExamStatus } from './exam.entity';
-import { Session, SessionMode, SessionStatus } from '../sessions/session.entity';
-import { ScheduleExamDto } from './dto/schedule-exam.dto';
-import { SessionService } from '../sessions/session.service';
-import { CompleteExamDto } from './dto/complete-exam.dto';
-import { SurgicalEventService } from '../surgical-events/surgical-event.service';
+import {
+    Injectable,
+    NotFoundException,
+    BadRequestException,
+    ConflictException,
+} from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository, LessThan } from "typeorm";
+import { Exam, ExamStatus } from "./exam.entity";
+import {
+    Session,
+    SessionMode,
+    SessionStatus,
+} from "../sessions/session.entity";
+import { ScheduleExamDto } from "./dto/schedule-exam.dto";
+import { SessionService } from "../sessions/session.service";
+import { CompleteExamDto } from "./dto/complete-exam.dto";
+import { SurgicalEventService } from "../surgical-events/surgical-event.service";
 
 @Injectable()
 export class ExamService {
@@ -30,7 +39,7 @@ export class ExamService {
         await this.sweepMissedExams();
         return this.examRepository.find({
             where: { studentId },
-            order: { scheduledAt: 'DESC' },
+            order: { scheduledAt: "DESC" },
         });
     }
 
@@ -38,16 +47,16 @@ export class ExamService {
         await this.sweepMissedExams();
         return this.examRepository.find({
             where: { supervisorId },
-            relations: ['student'],
-            order: { scheduledAt: 'DESC' },
+            relations: ["student"],
+            order: { scheduledAt: "DESC" },
         });
     }
 
     async findAll(): Promise<Exam[]> {
         await this.sweepMissedExams();
         return this.examRepository.find({
-            relations: ['student'],
-            order: { scheduledAt: 'DESC' },
+            relations: ["student"],
+            order: { scheduledAt: "DESC" },
         });
     }
 
@@ -67,7 +76,7 @@ export class ExamService {
         const exam = await this.findById(examId);
 
         if (exam.studentId !== studentId) {
-            throw new BadRequestException('This exam is not assigned to you');
+            throw new BadRequestException("This exam is not assigned to you");
         }
         if (exam.status !== ExamStatus.READY_CHECK) {
             throw new BadRequestException(`Exam is already ${exam.status}`);
@@ -78,7 +87,7 @@ export class ExamService {
         });
         if (activeSession) {
             throw new ConflictException({
-                message: 'An attempt is already in progress',
+                message: "An attempt is already in progress",
                 sessionId: activeSession.id,
             });
         }
@@ -104,10 +113,18 @@ export class ExamService {
             throw new BadRequestException(`Exam is already ${exam.status}`);
         }
         if (!exam.sessionId) {
-            throw new BadRequestException('Exam has no active session to complete');
+            throw new BadRequestException(
+                "Exam has no active session to complete",
+            );
         }
-        const freezeReactionMs = await this.surgicalEventService.getFreezeReactionTime(exam.sessionId);
-        const finalDto = { ...dto, reactionTime: freezeReactionMs ?? dto.reactionTime };
+        const freezeReactionMs =
+            await this.surgicalEventService.getFreezeReactionTime(
+                exam.sessionId,
+            );
+        const finalDto = {
+            ...dto,
+            reactionTime: freezeReactionMs ?? dto.reactionTime,
+        };
 
         await this.sessionService.complete(exam.sessionId, finalDto);
 
@@ -122,7 +139,9 @@ export class ExamService {
             throw new BadRequestException(`Exam is already ${exam.status}`);
         }
         if (!exam.sessionId) {
-            throw new BadRequestException('Exam has no active session to abort');
+            throw new BadRequestException(
+                "Exam has no active session to abort",
+            );
         }
 
         await this.sessionService.abort(exam.sessionId);
@@ -137,7 +156,9 @@ export class ExamService {
             throw new BadRequestException(`Exam is already ${exam.status}`);
         }
         if (!exam.sessionId) {
-            throw new BadRequestException('Exam has no active session to finish');
+            throw new BadRequestException(
+                "Exam has no active session to finish",
+            );
         }
 
         await this.sessionService.finish(exam.sessionId);
@@ -148,7 +169,7 @@ export class ExamService {
     async openRoom(examId: string, supervisorId: string): Promise<Exam> {
         const exam = await this.findById(examId);
         if (exam.supervisorId !== supervisorId) {
-            throw new BadRequestException('This exam is not assigned to you');
+            throw new BadRequestException("This exam is not assigned to you");
         }
         if (exam.status !== ExamStatus.SCHEDULED) {
             throw new BadRequestException(`Exam is already ${exam.status}`);
@@ -156,7 +177,7 @@ export class ExamService {
 
         const earliest = new Date(exam.scheduledAt.getTime() - 15 * 60 * 1000);
         if (new Date() < earliest) {
-            throw new BadRequestException('Too early to open the exam room');
+            throw new BadRequestException("Too early to open the exam room");
         }
 
         exam.status = ExamStatus.READY_CHECK;
@@ -167,7 +188,10 @@ export class ExamService {
     private async sweepMissedExams(): Promise<void> {
         const cutoff = new Date(Date.now() - 15 * 60 * 1000);
         const staleExams = await this.examRepository.find({
-            where: { status: ExamStatus.SCHEDULED, scheduledAt: LessThan(cutoff) },
+            where: {
+                status: ExamStatus.SCHEDULED,
+                scheduledAt: LessThan(cutoff),
+            },
         });
 
         if (staleExams.length === 0) return;

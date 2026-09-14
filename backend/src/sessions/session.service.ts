@@ -14,7 +14,7 @@ import { CompleteSessionDto } from "./dto/complete-session.dto";
 export class SessionService {
     constructor(
         @InjectRepository(Session)
-        private sessionRepository: Repository<Session>
+        private sessionRepository: Repository<Session>,
     ) {}
 
     async start(studentId: string, dto: StartSessionDto): Promise<Session> {
@@ -30,7 +30,7 @@ export class SessionService {
 
         if (dto.mode === SessionMode.EXAM && !dto.supervisorId) {
             throw new BadRequestException(
-                "supervisorId is required for exam sessions"
+                "supervisorId is required for exam sessions",
             );
         }
 
@@ -38,7 +38,8 @@ export class SessionService {
             studentId,
             mode: dto.mode,
             exerciseType: dto.exerciseType,
-            supervisorId: dto.mode === SessionMode.EXAM ? dto.supervisorId : null,
+            supervisorId:
+                dto.mode === SessionMode.EXAM ? dto.supervisorId : null,
             status: SessionStatus.IN_PROGRESS,
         });
 
@@ -48,7 +49,9 @@ export class SessionService {
     async complete(id: string, dto: CompleteSessionDto): Promise<Session> {
         const session = await this.findById(id);
         if (session.status !== SessionStatus.IN_PROGRESS) {
-        throw new BadRequestException(`Session is already ${session.status}`);
+            throw new BadRequestException(
+                `Session is already ${session.status}`,
+            );
         }
 
         session.status = SessionStatus.COMPLETED;
@@ -64,7 +67,9 @@ export class SessionService {
     async finish(id: string): Promise<Session> {
         const session = await this.findById(id);
         if (session.status !== SessionStatus.IN_PROGRESS) {
-            throw new BadRequestException(`Session is already ${session.status}`);
+            throw new BadRequestException(
+                `Session is already ${session.status}`,
+            );
         }
         session.status = SessionStatus.COMPLETED;
         session.endTime = new Date();
@@ -74,7 +79,9 @@ export class SessionService {
     async abort(id: string): Promise<Session> {
         const session = await this.findById(id);
         if (session.status !== SessionStatus.IN_PROGRESS) {
-        throw new BadRequestException(`Session is already ${session.status}`);
+            throw new BadRequestException(
+                `Session is already ${session.status}`,
+            );
         }
 
         session.status = SessionStatus.ABORTED;
@@ -91,21 +98,21 @@ export class SessionService {
 
     async findActiveForStudent(studentId: string): Promise<Session | null> {
         return this.sessionRepository.findOne({
-        where: { studentId, status: SessionStatus.IN_PROGRESS },
+            where: { studentId, status: SessionStatus.IN_PROGRESS },
         });
     }
 
     async findAllForStudent(studentId: string): Promise<Session[]> {
         return this.sessionRepository.find({
-        where: { studentId },
-        order: { startTime: "DESC" },
+            where: { studentId },
+            order: { startTime: "DESC" },
         });
     }
 
     async findAllForSupervisor(supervisorId: string): Promise<Session[]> {
         return this.sessionRepository.find({
             where: { supervisorId, mode: SessionMode.EXAM },
-            order: { startTime: 'DESC' },
+            order: { startTime: "DESC" },
         });
     }
 }

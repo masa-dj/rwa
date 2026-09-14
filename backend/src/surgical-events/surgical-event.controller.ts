@@ -18,17 +18,18 @@ import { SessionService } from "../sessions/session.service";
 export class SurgicalEventController {
     constructor(
         private surgicalEventService: SurgicalEventService,
-        private sessionService: SessionService
+        private sessionService: SessionService,
     ) {}
 
     @Get("session/:sessionId")
     async getBySession(
         @Request() req: any,
-        @Param("sessionId") sessionId: string
+        @Param("sessionId") sessionId: string,
     ) {
         const session = await this.sessionService.findById(sessionId);
         const isOwner =
-        session.studentId === req.user.id || session.supervisorId === req.user.id;
+            session.studentId === req.user.id ||
+            session.supervisorId === req.user.id;
         if (!isOwner) throw new ForbiddenException();
         return this.surgicalEventService.findBySession(sessionId);
     }

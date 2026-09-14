@@ -12,27 +12,27 @@ import { ReportModule } from "./reports/report.module";
 import { SurgicalEventModule } from "./surgical-events/surgical-event.module";
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forRoot({
-      type: "postgres",
-      host: process.env.DB_HOST,
-      port: 5432,
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      autoLoadEntities: true,
-      synchronize: true,
-    }),
-    AuthModule,
-    UsersModule,
-    PresenceModule,
-    SessionModule,
-    ExamModule,
-    ReportModule,
-    SurgicalEventModule,
-  ],
-  controllers: [AppController],
-  providers: [AppService],
+    imports: [
+        ConfigModule.forRoot({ isGlobal: true }),
+        TypeOrmModule.forRoot({
+            type: "postgres",
+            host: process.env.DB_HOST,
+            port: 5432,
+            username: process.env.DB_USERNAME,
+            password: process.env.DB_PASSWORD,
+            database: process.env.DB_NAME,
+            autoLoadEntities: true,
+            synchronize: true,
+        }),
+        AuthModule,
+        UsersModule,
+        PresenceModule,
+        SessionModule,
+        ExamModule,
+        ReportModule,
+        SurgicalEventModule,
+    ],
+    controllers: [AppController],
+    providers: [AppService],
 })
 export class AppModule {}

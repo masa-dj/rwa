@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable } from "@nestjs/common";
 
 interface RoomState {
     studentReady: boolean;
@@ -11,14 +11,17 @@ export class ExamRoomService {
 
     private getOrCreate(examId: string): RoomState {
         if (!this.rooms.has(examId)) {
-        this.rooms.set(examId, { studentReady: false, supervisorReady: false });
+            this.rooms.set(examId, {
+                studentReady: false,
+                supervisorReady: false,
+            });
         }
         return this.rooms.get(examId)!;
     }
 
-    setReady(examId: string, role: 'student' | 'supervisor'): RoomState {
+    setReady(examId: string, role: "student" | "supervisor"): RoomState {
         const room = this.getOrCreate(examId);
-        if (role === 'student') room.studentReady = true;
+        if (role === "student") room.studentReady = true;
         else room.supervisorReady = true;
         return room;
     }
