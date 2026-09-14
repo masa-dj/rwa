@@ -6,6 +6,7 @@ import { Session, SessionMode, SessionStatus } from '../sessions/session.entity'
 import { ScheduleExamDto } from './dto/schedule-exam.dto';
 import { SessionService } from '../sessions/session.service';
 import { CompleteExamDto } from './dto/complete-exam.dto';
+import { SurgicalEventService } from '../surgical-events/surgical-event.service';
 
 @Injectable()
 export class ExamService {
@@ -15,6 +16,7 @@ export class ExamService {
         @InjectRepository(Session)
         private sessionRepository: Repository<Session>,
         private sessionService: SessionService,
+        private surgicalEventService: SurgicalEventService,
     ) {}
 
     //find
@@ -104,8 +106,10 @@ export class ExamService {
         if (!exam.sessionId) {
             throw new BadRequestException('Exam has no active session to complete');
         }
+        const freezeReactionMs = await this.surgicalEventService.getFreezeReactionTime(exam.sessionId);
+        const finalDto = { ...dto, reactionTime: freezeReactionMs ?? dto.reactionTime };
 
-        await this.sessionService.complete(exam.sessionId, dto);
+        await this.sessionService.complete(exam.sessionId, finalDto);
 
         exam.status = ExamStatus.COMPLETED;
         return this.examRepository.save(exam);

@@ -2,105 +2,148 @@
     <app-sidebar></app-sidebar>
 
     <main class="layout__content" *ngIf="!loading && report">
-        <h1 class="layout__title">Report</h1>
-        <p class="layout__subtitle">
-            {{ report.timestamp | date : "MMM d, y · HH:mm" }}
-        </p>
-
-        <div class="grade-summary">
-            <div class="grade-summary__item">
-                <span class="grade-summary__label">Auto Grade</span>
-                <span class="grade-summary__value">{{
-                    report.autoGrade ?? "—"
-                }}</span>
-            </div>
-            <div class="grade-summary__item">
-                <span class="grade-summary__label">Supervisor Grade</span>
-                <span
-                    class="grade-summary__value"
-                    [class.is-pending]="report.supervisorGrade === null"
-                >
-                    {{ report.supervisorGrade ?? "Not yet graded" }}
-                </span>
+        <div class="layout__header">
+            <div>
+                <h1 class="layout__title">Report</h1>
+                <p class="layout__subtitle">
+                    {{ report.timestamp | date : "MMM d, y · HH:mm" }}
+                </p>
             </div>
         </div>
 
-        <ng-container *ngIf="isSupervisor; else readOnlyView">
-            <form [formGroup]="form" (ngSubmit)="save()" class="report-form">
-                <label class="field">
-                    <span class="field__label">Supervisor Grade (0-100)</span>
-                    <input
-                        type="number"
-                        min="0"
-                        max="100"
-                        formControlName="supervisorGrade"
-                        class="field__input"
-                    />
-                </label>
+        <div class="report-grid">
+            <section class="report-main">
+                <div class="grade-summary">
+                    <div class="grade-summary__item">
+                        <span class="grade-summary__label">Auto Grade</span>
+                        <span class="grade-summary__value">{{
+                            report.autoGrade ?? "—"
+                        }}</span>
+                    </div>
+                    <div class="grade-summary__item">
+                        <span class="grade-summary__label"
+                            >Supervisor Grade</span
+                        >
+                        <span
+                            class="grade-summary__value"
+                            [class.is-pending]="report.supervisorGrade === null"
+                        >
+                            {{ report.supervisorGrade ?? "Not yet graded" }}
+                        </span>
+                    </div>
+                </div>
 
-                <label class="field">
-                    <span class="field__label">Comment</span>
-                    <textarea
-                        formControlName="comment"
-                        class="field__input field__textarea"
-                        rows="4"
-                    ></textarea>
-                </label>
-
-                <label class="field">
-                    <span class="field__label">Highlight</span>
-                    <textarea
-                        formControlName="highlight"
-                        class="field__input field__textarea"
-                        rows="2"
-                    ></textarea>
-                </label>
-
-                <label class="checkbox-field">
-                    <input type="checkbox" formControlName="recommendsRetry" />
-                    <span>Recommends retry</span>
-                </label>
-
-                <div class="form-actions">
-                    <app-button variant="primary" type="submit"
-                        >Save</app-button
+                <ng-container *ngIf="isSupervisor; else readOnlyView">
+                    <form
+                        [formGroup]="form"
+                        (ngSubmit)="save()"
+                        class="report-form"
                     >
-                    <span class="saved-indicator" *ngIf="saved">Saved</span>
-                </div>
-            </form>
-        </ng-container>
+                        <label class="field">
+                            <span class="field__label"
+                                >Supervisor Grade (0–100)</span
+                            >
+                            <input
+                                type="number"
+                                min="0"
+                                max="100"
+                                formControlName="supervisorGrade"
+                                class="field__input"
+                            />
+                        </label>
 
-        <ng-template #readOnlyView>
-            <div class="report-readonly">
-                <div class="report-readonly__block" *ngIf="report.comment">
-                    <span class="field__label">Comment</span>
-                    <p>{{ report.comment }}</p>
-                </div>
-                <div class="report-readonly__block" *ngIf="report.highlight">
-                    <span class="field__label">Highlight</span>
-                    <p>{{ report.highlight }}</p>
-                </div>
-                <div
-                    class="report-readonly__block"
-                    *ngIf="report.recommendsRetry"
-                >
-                    <span class="retry-badge">Retry recommended</span>
-                </div>
-                <p
-                    class="empty-state"
-                    *ngIf="
-                        !report.comment &&
-                        !report.highlight &&
-                        !report.recommendsRetry
-                    "
-                >
-                    No feedback added yet.
-                </p>
-            </div>
-        </ng-template>
+                        <label class="field">
+                            <span class="field__label">Comment</span>
+                            <textarea
+                                formControlName="comment"
+                                class="field__input field__textarea"
+                                rows="4"
+                            ></textarea>
+                        </label>
 
-        <app-button variant="secondary" (clicked)="backToReports()"
-            >Back to Reports</app-button
-        >
+                        <label class="field">
+                            <span class="field__label">Highlight</span>
+                            <textarea
+                                formControlName="highlight"
+                                class="field__input field__textarea"
+                                rows="2"
+                            ></textarea>
+                        </label>
+
+                        <label class="checkbox-field">
+                            <input
+                                type="checkbox"
+                                formControlName="recommendsRetry"
+                            />
+                            <span>Recommends retry</span>
+                        </label>
+
+                        <div class="form-actions">
+                            <app-button variant="primary" type="submit"
+                                >Save</app-button
+                            >
+                            <span class="saved-indicator" *ngIf="saved"
+                                >Saved</span
+                            >
+                        </div>
+                    </form>
+                </ng-container>
+
+                <ng-template #readOnlyView>
+                    <div class="report-readonly">
+                        <div
+                            class="report-readonly__block"
+                            *ngIf="report.comment"
+                        >
+                            <span class="field__label">Comment</span>
+                            <p>{{ report.comment }}</p>
+                        </div>
+                        <div
+                            class="report-readonly__block"
+                            *ngIf="report.highlight"
+                        >
+                            <span class="field__label">Highlight</span>
+                            <p>{{ report.highlight }}</p>
+                        </div>
+                        <div
+                            class="report-readonly__block"
+                            *ngIf="report.recommendsRetry"
+                        >
+                            <span class="retry-badge">Retry recommended</span>
+                        </div>
+                        <p
+                            class="empty-state"
+                            *ngIf="
+                                !report.comment &&
+                                !report.highlight &&
+                                !report.recommendsRetry
+                            "
+                        >
+                            No feedback added yet.
+                        </p>
+                    </div>
+                </ng-template>
+
+                <app-button variant="secondary" (clicked)="backToReports()"
+                    >Back to Reports</app-button
+                >
+            </section>
+
+            <aside class="report-aside" *ngIf="events.length > 0">
+                <div class="timeline-card">
+                    <span class="chart-card__label">Session Timeline</span>
+                    <div class="timeline">
+                        <div class="timeline__row" *ngFor="let event of events">
+                            <span class="timeline__time">{{
+                                event.timestamp | date : "HH:mm:ss"
+                            }}</span>
+                            <span class="timeline__label">{{
+                                eventLabel(event)
+                            }}</span>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
     </main>
 </div>

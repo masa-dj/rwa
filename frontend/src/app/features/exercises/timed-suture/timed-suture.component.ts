@@ -20,11 +20,7 @@ import {
     withLatestFrom,
     auditTime,
 } from 'rxjs/operators';
-
-interface Point {
-    x: number;
-    y: number;
-}
+import { Point } from '../../../core/models/app.models';
 
 type StitchStatus = 'pending' | 'active' | 'completed' | 'missed';
 
@@ -60,7 +56,7 @@ const CANVAS_HEIGHT = 360;
 const STITCH_COUNT = 5;
 const START_RADIUS = 5;
 const TOLERANCE = 7;
-const STITCH_TIME_MS = 4000;
+const STITCH_TIME_MS = 10000;
 const TICK_MS = 50;
 const TOTAL_DURATION_MS = 30000;
 const KEY_POOL = ['A', 'S', 'D', 'F', 'W', 'E', 'R', 'M', 'N', 'H', 'P', 'O'];

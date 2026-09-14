@@ -8,9 +8,8 @@ import { SidebarComponent } from '../../shared/ui/sidebar/sidebar.component';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
 import {
     VesselCauterizationComponent,
-    CauterizationResult,
-    TelemetrySnapshot,
 } from '../exercises/vessel-cauterization/vessel-cauterization.component';
+import { VesselCauterizationTelemetrySnapshot, CauterizationResult } from '../exercises/vessel-cauterization/vessel-cauterization.constants';
 import { VesselCauterizationLiveViewComponent } from '../exercises/vessel-cauterization-live-view/vessel-cauterization-live-view.component';
 import {
     SteadyPathComponent,
@@ -55,13 +54,14 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
     myReady = false;
     errorMessage = '';
     endedMessage = '';
-    latestVCTelemetry: TelemetrySnapshot | null = null;
+    latestVCTelemetry: VesselCauterizationTelemetrySnapshot | null = null;
     latestSteadyPathTelemetry: SteadyPathTelemetrySnapshot | null = null;
     latestTimedSutureTelemetry: TimedSutureTelemetrySnapshot | null = null;
     isFrozen = false;
     isShaking = false;
     tremorUsesLeft = 1;
     freezeUsesLeft = 1;
+    tremorSignal = 0;
 
     private socket: Socket | null = null;
 
@@ -71,7 +71,7 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
     > = {
         vessel_cauterization: {
             equipment: 'Mouse',
-            time: '1 minute',
+            time: '30 seconds',
             description:
                 'Circular vessels will appear and drift across the canvas. Hold the mouse button down over a vessel and keep it centered for 3 seconds to seal it. Losing contact resets your progress on that vessel.',
         },
@@ -82,9 +82,9 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
                 'A winding vessel will appear on the canvas. Click and drag from the start, staying inside the corridor as you trace toward the end. Drifting outside the tolerance hurts your precision score.',
         },
         timed_suture: {
-            equipment: 'Mouse',
-            time: '',
-            description: '',
+            equipment: 'Mouse and keyboard',
+            time: '20 seconds',
+            description: 'A series of suture points will appear on the canvas. Press and hold the key indicated on the screen, then click and drag from one dot to the next to complete each stitch accurately.',
         },
     };
 
@@ -166,6 +166,7 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
         this.socket.on('exam:tremor', () => {
             this.isShaking = true;
             this.tremorUsesLeft = 0;
+            this.tremorSignal++;
             setTimeout(() => (this.isShaking = false), 2000);
         });
 
@@ -227,7 +228,7 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
         this.socket?.emit('exam:abort');
     }
 
-    onTelemetry(snapshot: TelemetrySnapshot) {
+    onTelemetry(snapshot: VesselCauterizationTelemetrySnapshot) {
         console.log('[student] sending telemetry', snapshot);
         this.socket?.emit('exam:telemetry', snapshot);
     }
@@ -238,7 +239,7 @@ export class ExamRoomComponent implements OnInit, OnDestroy {
         );
         this.socket?.emit('exam:finish', {
             precisionScore: score,
-            tremorIndex: 0,
+            tremorIndex: result.tremorIndex,
             score,
         });
     }

@@ -4,9 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { SessionService, Session } from '../../../core/services/session.service';
 import { SidebarComponent } from '../../../shared/ui/sidebar/sidebar.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
-import { VesselCauterizationComponent, CauterizationResult } from '../../exercises/vessel-cauterization/vessel-cauterization.component';
+import { VesselCauterizationComponent } from '../../exercises/vessel-cauterization/vessel-cauterization.component';
 import { SteadyPathComponent, SteadyPathResult } from '../../exercises/steady-path/steady-path.component';
 import { TimedSutureComponent, TimedSutureResult } from '../../exercises/timed-suture/timed-suture.component';
+import { CauterizationResult } from '../../exercises/vessel-cauterization/vessel-cauterization.constants';
 
 @Component({
   selector: 'app-practice-room',

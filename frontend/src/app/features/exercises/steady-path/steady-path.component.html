@@ -1,22 +1,22 @@
 <div class="exercise">
-  <div class="exercise__hud">
-    <span class="exercise__timer">{{ formatTime(timeRemaining) }}</span>
-    <span class="exercise__score">Progress: {{ progressPercent }}%</span>
-  </div>
+    <div class="exercise__hud">
+        <span class="exercise__timer">Remainig time: {{ formatTime(timeRemaining) }}</span>
+        <span class="exercise__score">Progress: {{ progressPercent }}%</span>
+    </div>
 
-  <div class="exercise__canvas" #canvas>
-    <svg [attr.viewBox]="'0 0 ' + 800 + ' ' + 360" class="exercise__svg">
-      <path [attr.d]="pathD" class="vessel__corridor" #pathEl />
-      <path [attr.d]="pathD" class="vessel__centerline" />
+    <div class="exercise__canvas" #canvas>
+        <svg [attr.viewBox]="'0 0 ' + 800 + ' ' + 360" class="exercise__svg">
+            <path [attr.d]="pathD" class="vessel__corridor" #pathEl />
+            <path [attr.d]="pathD" class="vessel__centerline" />
 
-      <circle
-        *ngIf="cursor"
-        [attr.cx]="cursor.x"
-        [attr.cy]="cursor.y"
-        r="7"
-        class="cursor-dot"
-        [class.is-out]="isOutOfBounds"
-      />
-    </svg>
-  </div>
+            <circle
+                *ngIf="cursor"
+                [attr.cx]="cursor.x"
+                [attr.cy]="cursor.y"
+                r="7"
+                class="cursor-dot"
+                [class.is-out]="isOutOfBounds"
+            />
+        </svg>
+    </div>
 </div>

@@ -1,25 +1,18 @@
-.layout {
+
+.report-grid {
     display: flex;
-    min-height: 100vh;
+    gap: 24px;
+    align-items: flex-start;
 }
-.layout__content {
+
+.report-main {
     flex: 1;
-    padding: 48px 56px;
-    max-width: 640px;
+    min-width: 0;
 }
-.layout__title {
-    font-family: var(--font-display);
-    font-size: 32px;
-    font-weight: 600;
-    margin: 0;
-}
-.layout__subtitle {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--color-slate);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin: 4px 0 24px;
+
+.report-aside {
+    flex-shrink: 0;
+    width: 260px;
 }
 
 .grade-summary {
@@ -38,7 +31,6 @@
 
 .grade-summary__label {
     display: block;
-    font-family: var(--font-mono);
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -81,14 +73,12 @@
     color: var(--color-text);
     margin-bottom: 6px;
 }
-
 .field__input {
     width: 100%;
     box-sizing: border-box;
     padding: 10px 12px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
-    font-family: var(--font-body);
     font-size: 14px;
     color: var(--color-text);
 }
@@ -112,9 +102,8 @@
 }
 
 .saved-indicator {
-    font-family: var(--font-mono);
     font-size: 12px;
-    color: var(--color-moss);
+    color: var(--color-green);
 }
 
 .report-readonly__block {
@@ -141,4 +130,53 @@
 .empty-state {
     color: var(--color-slate);
     font-size: 14px;
+}
+
+
+.timeline-card {
+    background: #fff;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+}
+
+.chart-card__label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-slate);
+    margin-bottom: 10px;
+}
+
+.timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 480px;
+    overflow-y: auto;
+    :hover {
+        background:#f6f6f6;
+    }
+}
+
+.timeline__row {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    padding: 6px 8px;
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+}
+
+.timeline__time {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--color-slate);
+}
+
+.timeline__label {
+    color: var(--color-text);
+    font-weight: 500;
+    font-size: 12px;
 }

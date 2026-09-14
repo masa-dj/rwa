@@ -55,6 +55,7 @@
             <ng-container *ngIf="!isSupervisor && isVesselCauterization">
                 <div [class.is-shaking]="isShaking">
                     <app-vessel-cauterization
+                        [tremorSignal]="tremorSignal"
                         (telemetry)="onTelemetry($event)"
                         (finished)="onExerciseFinished($event)"
                         (surgicalEvent)="onSurgicalEvent($event)"

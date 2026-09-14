@@ -3,6 +3,11 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ReportService, Report } from '../../core/services/report.service';
+import { ExamService } from '../../core/services/exam.service';
+import {
+    SurgicalEventService,
+    SurgicalEvent,
+} from '../../core/services/surgical-event.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SidebarComponent } from '../../shared/ui/sidebar/sidebar.component';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
@@ -26,10 +31,26 @@ export class ReportDetailComponent implements OnInit {
     form!: FormGroup;
     saved = false;
 
+    events: SurgicalEvent[] = [];
+
+    eventLabels: Record<string, string> = {
+        target_sealed: 'Target sealed',
+        stitch_completed: 'Stitch completed',
+        stitch_missed: 'Stitch missed',
+        path_completed: 'Path completed',
+        path_timeout: 'Path timed out',
+        freeze_triggered: 'Freeze triggered',
+        freeze_acknowledged: 'Freeze acknowledged',
+        tremor_triggered: 'Tremor triggered',
+        exam_aborted: 'Exam aborted',
+    };
+
     constructor(
         private route: ActivatedRoute,
         private router: Router,
         private reportService: ReportService,
+        private examService: ExamService,
+        private surgicalEventService: SurgicalEventService,
         private authService: AuthService,
         private fb: FormBuilder
     ) {
@@ -54,7 +75,20 @@ export class ReportDetailComponent implements OnInit {
                 recommendsRetry: report.recommendsRetry,
             });
             this.loading = false;
+
+            this.examService.getOne(report.examId).subscribe((exam) => {
+                if (!exam.sessionId) return;
+                this.surgicalEventService
+                    .getBySession(exam.sessionId)
+                    .subscribe((events) => {
+                        this.events = events;
+                    });
+            });
         });
+    }
+
+    eventLabel(event: SurgicalEvent): string {
+        return this.eventLabels[event.type] ?? event.type;
     }
 
     save() {

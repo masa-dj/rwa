@@ -1,34 +1,39 @@
 <div class="exercise">
-  <div class="exercise__hud">
-    <span class="exercise__timer">{{ formatTime(timeRemaining) }}</span>
-    <span class="exercise__score">Sealed: {{ sealedCount }}</span>
-  </div>
-
-  <div class="exercise__canvas" #canvas>
-    <div
-      class="target"
-      *ngFor="let t of targets"
-      [style.left.px]="t.x - t.radius"
-      [style.top.px]="t.y - t.radius"
-      [style.width.px]="t.radius * 2"
-      [style.height.px]="t.radius * 2"
-    >
-      <svg class="target__ring" [attr.viewBox]="'0 0 ' + (t.radius * 2) + ' ' + (t.radius * 2)">
-        <circle
-          class="target__ring-bg"
-          [attr.cx]="t.radius"
-          [attr.cy]="t.radius"
-          [attr.r]="t.radius - 3"
-        />
-        <circle
-          class="target__ring-progress"
-          [attr.cx]="t.radius"
-          [attr.cy]="t.radius"
-          [attr.r]="t.radius - 3"
-          [style.stroke-dasharray]="2 * 3.14159 * (t.radius - 3)"
-          [style.stroke-dashoffset]="2 * 3.14159 * (t.radius - 3) * (1 - t.holdProgress)"
-        />
-      </svg>
+    <div class="exercise__hud">
+        <span class="exercise__timer">Remaining time: {{ formatTime(timeRemaining) }}</span>
+        <span class="exercise__score">Sealed: {{ sealedCount }}</span>
     </div>
-  </div>
+
+    <div class="exercise__canvas" #canvas>
+        <div
+            class="target"
+            *ngFor="let t of targets"
+            [style.left.px]="t.x - t.radius"
+            [style.top.px]="t.y - t.radius"
+            [style.width.px]="t.radius * 2"
+            [style.height.px]="t.radius * 2"
+        >
+            <svg
+                class="target__ring"
+                [attr.viewBox]="'0 0 ' + t.radius * 2 + ' ' + t.radius * 2"
+            >
+                <circle
+                    class="target__ring-bg"
+                    [attr.cx]="t.radius"
+                    [attr.cy]="t.radius"
+                    [attr.r]="t.radius - 3"
+                />
+                <circle
+                    class="target__ring-progress"
+                    [attr.cx]="t.radius"
+                    [attr.cy]="t.radius"
+                    [attr.r]="t.radius - 3"
+                    [style.stroke-dasharray]="2 * 3.14159 * (t.radius - 3)"
+                    [style.stroke-dashoffset]="
+                        2 * 3.14159 * (t.radius - 3) * (1 - t.holdProgress)
+                    "
+                />
+            </svg>
+        </div>
+    </div>
 </div>

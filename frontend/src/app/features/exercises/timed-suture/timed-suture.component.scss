@@ -2,14 +2,12 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
-    font-family: var(--font-body);
 }
 
 .exercise__hud {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: var(--font-mono);
+    flex-direction: column;
+    gap: 2;
     font-size: 13px;
     color: var(--color-slate);
 }
@@ -25,7 +23,7 @@
     padding: 3px 10px;
     border-radius: var(--radius-sm);
     background: var(--color-paper-alt);
-    color: white;
+    color: black;
     letter-spacing: 0.05em;
 
     &.is-held {
@@ -34,11 +32,18 @@
     }
 }
 
+.exercise__info{
+    display: flex;
+    justify-content: space-between;
+    width: 560px;
+    align-items: center;
+}
+
 .exercise__canvas {
     position: relative;
     width: 560px;
     height: 360px;
-    background: var(--color-ink);
+    background: #5c1801;
     border-radius: var(--radius-lg);
     overflow: hidden;
     touch-action: none;
@@ -51,13 +56,13 @@
 }
 
 .wound-line {
-    stroke: rgba(248, 246, 242, 0.15);
+    stroke: white;
     stroke-width: 2;
     stroke-dasharray: 6 4;
 }
 
 .stitch__corridor {
-    stroke: rgba(232, 163, 61, 0.35);
+    stroke: rgba(232, 127, 61, 0.18);
     stroke-width: 32;
     stroke-linecap: round;
     transition: stroke 0.1s ease;
@@ -68,18 +73,18 @@
 }
 
 .stitch__point {
-    fill: rgba(248, 246, 242, 0.15);
-    stroke: rgba(248, 246, 242, 0.3);
+    fill: white;
+    stroke: gray;
     stroke-width: 1.5;
     transition: fill 0.15s ease, stroke 0.15s ease;
 
     &.is-active {
-        fill: var(--color-accent-soft);
-        stroke: var(--color-accent);
+        fill: rgba(232, 61, 61, 0.318);
+        stroke: #a32900;
     }
     &.is-completed {
-        fill: var(--color-moss-soft);
-        stroke: var(--color-moss);
+        fill: rgb(160, 184, 125);
+        stroke: green;
     }
     &.is-missed {
         fill: #fbeae4;
@@ -99,25 +104,20 @@
 }
 
 .key-callout__bg {
-    fill: var(--color-accent-soft);
-    stroke: var(--color-accent);
+    fill: white;
     stroke-width: 1.5;
     transition: fill 0.1s ease, stroke 0.1s ease;
-
     &.is-held {
-        fill: var(--color-moss-soft);
-        stroke: var(--color-moss);
+        stroke: green;
     }
 }
 
 .key-callout__text {
-    font-family: var(--font-mono);
     font-size: 16px;
     font-weight: 700;
-    fill: #8a5a1f;
+    fill: black;
     transition: fill 0.1s ease;
-
     &.is-held {
-        fill: #2b6b46;
+        fill: green;
     }
 }

@@ -2,8 +2,14 @@
     <app-sidebar></app-sidebar>
 
     <main class="layout__content">
-        <h1 class="layout__title">Analysis</h1>
-        <p class="layout__subtitle">Performance across sessions and exams</p>
+        <div class="layout__header">
+            <div>
+                <h1 class="layout__title">Analysis</h1>
+                <p class="layout__subtitle">
+                    Performance across sessions and exams
+                </p>
+            </div>
+        </div>
 
         <ng-container *ngIf="!(loading$ | async)">
             <div class="stats-row">

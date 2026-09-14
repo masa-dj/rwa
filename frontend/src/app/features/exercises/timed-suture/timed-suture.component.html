@@ -1,16 +1,13 @@
 <div class="exercise">
+    <div class="exercise__info">
     <div class="exercise__hud">
-        <span class="exercise__timer">{{ formatTime(timeRemaining) }}</span>
-
-        <span class="exercise__key" [class.is-held]="isKeyHeld">
-            HOLD [ {{ currentTargetKey }} ]
-        </span>
-
-        <span class="exercise__score"
-            >Stitch {{ activeIndex + 1 }} / {{ stitches.length }}</span
-        >
+        <span class="exercise__timer">Remaining time: {{ formatTime(timeRemaining) }}</span>
+        <span class="exercise__score">Stitch {{ activeIndex + 1 }} / {{ stitches.length }}</span>
     </div>
-
+    <span class="exercise__key" [class.is-held]="isKeyHeld">
+        HOLD [ {{ currentTargetKey }} ]
+    </span>
+    </div>
     <div class="exercise__canvas" #canvas>
         <svg [attr.viewBox]="'0 0 560 360'" class="exercise__svg">
             <line x1="40" y1="180" x2="520" y2="180" class="wound-line" />
@@ -47,7 +44,7 @@
                 <g *ngIf="i === activeIndex" class="key-callout">
                     <rect
                         [attr.x]="(s.entry.x + s.exit.x) / 2 - 34"
-                        [attr.y]="Math.min(s.entry.y, s.exit.y) - 46"
+                        [attr.y]="Math.min(s.entry.y, s.exit.y) - 60"
                         width="68"
                         height="28"
                         rx="6"
@@ -56,7 +53,7 @@
                     />
                     <text
                         [attr.x]="(s.entry.x + s.exit.x) / 2"
-                        [attr.y]="Math.min(s.entry.y, s.exit.y) - 27"
+                        [attr.y]="Math.min(s.entry.y, s.exit.y) - 40"
                         text-anchor="middle"
                         class="key-callout__text"
                         [class.is-held]="isKeyHeld"
