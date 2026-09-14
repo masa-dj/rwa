@@ -3,18 +3,18 @@ import { RouterOutlet } from '@angular/router';
 import { PresenceService } from './core/services/presence.service';
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
-  template: `<router-outlet />`,
+    selector: 'app-root',
+    standalone: true,
+    imports: [RouterOutlet],
+    template: `<router-outlet />`,
 })
 export class AppComponent implements OnInit {
-  constructor(private presenceService: PresenceService) {}
+    constructor(private presenceService: PresenceService) {}
 
-  ngOnInit() {
-    const token = localStorage.getItem('token');
-    if (token) {
-      this.presenceService.connect(token);
+    ngOnInit() {
+        const token = localStorage.getItem('token');
+        if (token) {
+            this.presenceService.connect(token);
+        }
     }
-  }
 }

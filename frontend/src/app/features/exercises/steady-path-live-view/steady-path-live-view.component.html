@@ -1,22 +1,26 @@
 <div class="live-view" *ngIf="snapshot">
-  <div class="live-view__hud">
-    <span class="live-view__timer">{{ formatTime(snapshot.timeRemaining) }}</span>
-    <span class="live-view__score">Progress: {{ snapshot.progressPercent }}%</span>
-  </div>
+    <div class="live-view__hud">
+        <span class="live-view__timer">{{
+            formatTime(snapshot.timeRemaining)
+        }}</span>
+        <span class="live-view__score"
+            >Progress: {{ snapshot.progressPercent }}%</span
+        >
+    </div>
 
-  <div class="live-view__canvas">
-    <svg viewBox="0 0 900 360" class="live-view__svg">
-      <path [attr.d]="snapshot.pathD" class="vessel__corridor" />
-      <path [attr.d]="snapshot.pathD" class="vessel__centerline" />
+    <div class="live-view__canvas">
+        <svg viewBox="0 0 900 360" class="live-view__svg">
+            <path [attr.d]="snapshot.pathD" class="vessel__corridor" />
+            <path [attr.d]="snapshot.pathD" class="vessel__centerline" />
 
-      <circle
-        *ngIf="snapshot.cursor"
-        [attr.cx]="snapshot.cursor.x"
-        [attr.cy]="snapshot.cursor.y"
-        r="7"
-        class="cursor-dot"
-        [class.is-out]="snapshot.isOutOfBounds"
-      />
-    </svg>
-  </div>
+            <circle
+                *ngIf="snapshot.cursor"
+                [attr.cx]="snapshot.cursor.x"
+                [attr.cy]="snapshot.cursor.y"
+                r="7"
+                class="cursor-dot"
+                [class.is-out]="snapshot.isOutOfBounds"
+            />
+        </svg>
+    </div>
 </div>

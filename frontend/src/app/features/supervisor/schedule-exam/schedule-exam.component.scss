@@ -1,28 +1,3 @@
-.layout {
-    display: flex;
-    min-height: 100vh;
-}
-
-.layout__content {
-    flex: 1;
-    padding: 48px 56px;
-    max-width: 560px;
-}
-
-.layout__title {
-    font-size: 32px;
-    font-weight: 600;
-    color: var(--color-text);
-    margin: 0;
-}
-
-.layout__subtitle {
-    font-size: 13px;
-    color: var(--color-slate);
-    text-transform: uppercase;
-    margin: 4px 0 32px;
-}
-
 .form-card,
 .success-card {
     background: #fff;
