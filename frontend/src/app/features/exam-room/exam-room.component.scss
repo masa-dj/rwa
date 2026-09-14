@@ -8,7 +8,6 @@
     max-width: 850px;
 }
 .layout__title {
-    font-family: var(--font-display);
     font-size: 28px;
     font-weight: 600;
     margin: 0 0 24px;
@@ -32,7 +31,6 @@
     color: var(--color-text);
 }
 .ready-badge {
-    font-family: var(--font-mono);
     font-size: 11px;
     text-transform: uppercase;
     padding: 3px 10px;
@@ -40,15 +38,14 @@
     background: var(--color-paper-alt);
     color: var(--color-slate);
     &.is-ready {
-        background: var(--color-moss-soft);
+        background: var(--color-green);
         color: #2b6b46;
     }
 }
 .room-card__status {
-    font-family: var(--font-mono);
     font-size: 13px;
     text-transform: uppercase;
-    color: var(--color-moss);
+    color: var(--color-green);
 }
 .error {
     color: #b3462c;
@@ -63,10 +60,8 @@
 }
 
 .instructions__label {
-    font-family: var(--font-mono);
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
     color: var(--color-slate);
 }
 
@@ -105,7 +100,6 @@
     align-items: center;
     justify-content: center;
     color: var(--color-text);
-    font-family: var(--font-mono);
     font-size: 18px;
     font-weight: 600;
     z-index: 100;

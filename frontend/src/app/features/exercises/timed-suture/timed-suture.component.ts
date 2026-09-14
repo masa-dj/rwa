@@ -71,7 +71,12 @@ const KEY_POOL = ['A', 'S', 'D', 'F', 'W', 'E', 'R', 'M', 'N', 'H', 'P', 'O'];
 export class TimedSutureComponent implements OnInit, AfterViewInit, OnDestroy {
     @Output() finished = new EventEmitter<TimedSutureResult>();
     @Output() telemetry = new EventEmitter<TimedSutureTelemetrySnapshot>();
-    @Output() surgicalEvent = new EventEmitter<{ type: string; x?: number; y?: number; payload?: any }>();
+    @Output() surgicalEvent = new EventEmitter<{
+        type: string;
+        x?: number;
+        y?: number;
+        payload?: any;
+    }>();
 
     @ViewChild('canvas', { static: true })
     canvasRef!: ElementRef<HTMLDivElement>;
@@ -254,21 +259,26 @@ export class TimedSutureComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private completeStitch(stitch: Stitch) {
         stitch.status = 'completed';
-        const precision = this.attemptTicks > 0 ? Math.round((this.attemptInBoundsTicks / this.attemptTicks) * 100) : 0;
+        const precision =
+            this.attemptTicks > 0
+                ? Math.round(
+                      (this.attemptInBoundsTicks / this.attemptTicks) * 100
+                  )
+                : 0;
         stitch.precision = precision;
         this.completedPrecisions.push(precision);
 
         this.surgicalEvent.emit({
-          type: 'stitch_completed',
-          x: stitch.exit.x,
-          y: stitch.exit.y,
-          payload: { precision, key: stitch.targetKey },
+            type: 'stitch_completed',
+            x: stitch.exit.x,
+            y: stitch.exit.y,
+            payload: { precision, key: stitch.targetKey },
         });
 
         this.cursor = null;
         this.stitchAdvance$.next();
         this.advance();
-      }
+    }
 
     private activateStitch(
         index: number,
@@ -288,11 +298,14 @@ export class TimedSutureComponent implements OnInit, AfterViewInit, OnDestroy {
             .pipe(takeUntil(this.stitchAdvance$), takeUntil(this.destroy$))
             .subscribe(() => {
                 if (this.stitches[index].status === 'active') {
-                  this.stitches[index].status = 'missed';
-                  this.surgicalEvent.emit({ type: 'stitch_missed', payload: { key: this.stitches[index].targetKey } }); // 👈 add
-                  this.advance();
+                    this.stitches[index].status = 'missed';
+                    this.surgicalEvent.emit({
+                        type: 'stitch_missed',
+                        payload: { key: this.stitches[index].targetKey },
+                    }); // 👈 add
+                    this.advance();
                 }
-              });
+            });
     }
 
     private advance() {
@@ -364,10 +377,11 @@ export class TimedSutureComponent implements OnInit, AfterViewInit, OnDestroy {
         const completionRate = Math.round((completed / total) * 100);
 
         const precision =
-            completed > 0 ?
-                Math.round(
-                    this.completedPrecisions.reduce((a, b) => a + b, 0) / completed
-                )
+            completed > 0
+                ? Math.round(
+                      this.completedPrecisions.reduce((a, b) => a + b, 0) /
+                          completed
+                  )
                 : 0;
 
         const filledReactions = this.stitchReactionMs.map((r) =>

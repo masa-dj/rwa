@@ -1,23 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
-export interface Report {
-    id: string;
-    examId: string;
-    autoGrade: number | null;
-    supervisorGrade: number | null;
-    comment: string | null;
-    highlight: string | null;
-    recommendsRetry: boolean;
-    timestamp: string;
-}
-
-export interface UpdateReportPayload {
-    supervisorGrade?: number;
-    comment?: string;
-    highlight?: string;
-    recommendsRetry?: boolean;
-}
+import { Report, UpdateReportPayload } from '../models/app.models';
 
 @Injectable({ providedIn: 'root' })
 export class ReportService {

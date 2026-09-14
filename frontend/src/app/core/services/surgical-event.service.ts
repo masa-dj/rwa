@@ -1,17 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
-export interface SurgicalEvent {
-    id: string;
-    sessionId: string;
-    type: string;
-    x: number | null;
-    y: number | null;
-    deviation: number | null;
-    payload: Record<string, any> | null;
-    triggeredBy: string | null;
-    timestamp: string;
-}
+import { SurgicalEvent } from '../models/app.models';
 
 @Injectable({ providedIn: 'root' })
 export class SurgicalEventService {

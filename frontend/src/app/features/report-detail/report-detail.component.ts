@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ReportService, Report } from '../../core/services/report.service';
+import { ReportService } from '../../core/services/report.service';
+import { Report, SurgicalEvent } from '../../core/models/app.models';
 import { ExamService } from '../../core/services/exam.service';
 import {
     SurgicalEventService,
-    SurgicalEvent,
 } from '../../core/services/surgical-event.service';
 import { AuthService } from '../../core/services/auth.service';
 import { SidebarComponent } from '../../shared/ui/sidebar/sidebar.component';

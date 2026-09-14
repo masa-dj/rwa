@@ -24,7 +24,6 @@
     border-radius: var(--radius-sm);
     background: var(--color-paper-alt);
     color: black;
-    letter-spacing: 0.05em;
 
     &.is-held {
         background: var(--color-green);
@@ -93,7 +92,7 @@
 }
 
 .cursor-dot {
-    fill: var(--color-moss);
+    fill: var(--color-green);
     stroke: var(--color-text-inverse);
     stroke-width: 2;
     transition: fill 0.1s ease;

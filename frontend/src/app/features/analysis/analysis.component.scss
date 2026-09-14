@@ -12,7 +12,6 @@
 }
 .stat-card__label {
     display: block;
-    font-family: var(--font-mono);
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -20,7 +19,6 @@
     margin-bottom: 4px;
 }
 .stat-card__value {
-    font-family: var(--font-display);
     font-size: 28px;
     font-weight: 600;
     color: var(--color-text);
@@ -58,10 +56,8 @@
 .breakdown-table {
     width: 100%;
     border-collapse: collapse;
-    font-family: var(--font-body);
     th {
         text-align: left;
-        font-family: var(--font-mono);
         font-size: 11px;
         text-transform: uppercase;
         letter-spacing: 0.05em;

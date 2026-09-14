@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../button/button.component';
-import { Exam } from '../../../core/services/exam.service';
+import { Exam } from '../../../core/models/app.models';
 
 interface CalendarDay {
     date: number;

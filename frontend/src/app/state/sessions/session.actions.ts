@@ -1,5 +1,5 @@
 import { createAction, props} from '@ngrx/store';
-import { Session } from '../../core/services/session.service';
+import { Session } from '../../core/models/app.models';
 
 export const loadSessions = createAction('[Analysis] Load Session');
 export const loadSessionsSuccess = createAction(

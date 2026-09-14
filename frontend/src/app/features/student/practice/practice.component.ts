@@ -1,12 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import {
-    SessionService,
-    Session,
-    ExerciseType,
-} from '../../../core/services/session.service';
+import { SessionService } from '../../../core/services/session.service';
+import { ExerciseType, Session } from '../../../core/models/app.models';
 import { SidebarComponent } from '../../../shared/ui/sidebar/sidebar.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
 
@@ -21,6 +18,7 @@ export class PracticeComponent implements OnInit {
     sessions: Session[] = [];
     loading = true;
     selectedExercise: ExerciseType = 'steady_path';
+    isScreenSupported = true;
 
     exerciseTypes: { value: ExerciseType; label: string }[] = [
         { value: 'steady_path', label: 'Steady Path' },
@@ -34,7 +32,13 @@ export class PracticeComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.checkScreenWidth();
         this.checkActiveThenLoad();
+    }
+
+    @HostListener('window:resize')
+    checkScreenWidth() {
+        this.isScreenSupported = window.innerWidth > 1100;
     }
 
     private checkActiveThenLoad() {

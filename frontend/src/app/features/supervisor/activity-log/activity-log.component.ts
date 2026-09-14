@@ -1,10 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {
-    PresenceService,
-    PresenceUser,
-} from '../../../core/services/presence.service';
-import { Observable } from 'rxjs';
+import { PresenceService } from '../../../core/services/presence.service';
+import { PresenceUser } from '../../../core/models/app.models';
+import { Observable, map } from 'rxjs';
 
 @Component({
     selector: 'app-activity-log',
@@ -19,7 +17,26 @@ export class ActivityLogComponent implements OnInit {
     constructor(private presenceService: PresenceService) {}
 
     ngOnInit() {
-        this.users$ = this.presenceService.presenceList$;
+        this.users$ = this.presenceService.presenceList$.pipe(
+            map((users) => {
+                const now = Date.now();
+                const twentyFourHoursMs = 24 * 60 * 60 * 1000;
+
+                return users
+                    .filter((user) => {
+                        if (!user.lastSeenAt) return false;
+                        const lastSeenTime = new Date(
+                            user.lastSeenAt
+                        ).getTime();
+                        return now - lastSeenTime <= twentyFourHoursMs;
+                    })
+                    .sort((a, b) => {
+                        const timeA = new Date(a.lastSeenAt!).getTime();
+                        const timeB = new Date(b.lastSeenAt!).getTime();
+                        return timeB - timeA;
+                    });
+            })
+        );
     }
 
     timeAgo(date: string | null): string {

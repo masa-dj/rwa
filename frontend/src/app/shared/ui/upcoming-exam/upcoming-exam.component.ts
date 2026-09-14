@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Exam } from '../../../core/services/exam.service';
+import { Exam } from '../../../core/models/app.models';
 import { AuthService } from '../../../core/services/auth.service';
 import * as ExamActions from '../../../state/exams/exam.actions';
 import { selectUpcomingExams } from '../../../state/exams/exam.selectors';

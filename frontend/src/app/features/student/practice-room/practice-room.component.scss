@@ -5,10 +5,8 @@
 }
 
 .exercise-label {
-    font-family: var(--font-mono);
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
     color: var(--color-slate);
     margin: 0 0 8px;
 }
@@ -23,14 +21,13 @@
 .room-card__label {
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
     color: var(--color-slate);
 }
 
 .room-card__status {
     font-size: 20px;
     font-weight: 600;
-    color: var(--color-moss);
+    color: var(--color-green);
     margin: 0;
 }
 

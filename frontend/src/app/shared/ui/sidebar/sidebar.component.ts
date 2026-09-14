@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { ButtonComponent } from '../button/button.component';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -12,7 +12,12 @@ import {
     LucideLibrary,
     LucideNotebookPen,
     LucideChartLine,
+    LucideCircleAlert,
+    LucideMenu,
+    LucideX,
 } from '@lucide/angular';
+import { Observable, filter, map } from 'rxjs';
+import { UsersService } from '../../../core/services/users.service';
 
 interface NavItem {
     label: string;
@@ -48,9 +53,38 @@ const USERS_NAV_ITEM: NavItem = {
     templateUrl: './sidebar.component.html',
     styleUrls: ['./sidebar.component.scss'],
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
     readonly LogOutIcon = LucideLogOut;
-    constructor(private authService: AuthService, private router: Router) {}
+    readonly Alert = LucideCircleAlert;
+    readonly MenuIcon = LucideMenu;
+    readonly CloseIcon = LucideX;
+    hasPendingUsers$!: Observable<boolean>;
+    isOpen = false;
+    constructor(
+        private authService: AuthService,
+        private usersService: UsersService,
+        private router: Router
+    ) {}
+
+    ngOnInit() {
+        if (this.isSupervisor) {
+            this.hasPendingUsers$ = this.usersService
+                .getAll()
+                .pipe(
+                    map((users) => users.some((u) => u.status === 'pending'))
+                );
+        }
+
+        this.router.events
+            .pipe(filter((event) => event instanceof NavigationEnd))
+            .subscribe(() => {
+                this.isOpen = false;
+            });
+    }
+
+    toggleSidebar() {
+        this.isOpen = !this.isOpen;
+    }
 
     get isSupervisor(): boolean {
         return this.authService.getUser()?.role === 'supervisor';

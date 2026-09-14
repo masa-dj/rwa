@@ -1,6 +1,6 @@
 import { createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
-import { Exam } from '../../core/services/exam.service';
+import { Exam } from '../../core/models/app.models';
 import * as ExamActions from './exam.actions';
 
 

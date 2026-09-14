@@ -1,6 +1,6 @@
 <div *ngIf="user">
-  <h2 *ngIf="user.status === 'pending'">Your account is pending approval</h2>
-  <h2 *ngIf="user.status === 'rejected'">Your account was not approved</h2>
-  <p>Contact a supervisor for more information.</p>
-  <button (click)="logout()">Logout</button>
+    <h2 *ngIf="user.status === 'pending'">Your account is pending approval</h2>
+    <h2 *ngIf="user.status === 'rejected'">Your account was not approved</h2>
+    <p>Contact a supervisor for more information.</p>
+    <button (click)="logout()">Logout</button>
 </div>

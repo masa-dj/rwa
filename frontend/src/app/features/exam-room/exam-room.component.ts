@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { io, Socket } from 'socket.io-client';
 import { AuthService } from '../../core/services/auth.service';
-import { ExamService, Exam } from '../../core/services/exam.service';
+import { ExamService } from '../../core/services/exam.service';
+import { Exam } from '../../core/models/app.models';
 import { SidebarComponent } from '../../shared/ui/sidebar/sidebar.component';
 import { ButtonComponent } from '../../shared/ui/button/button.component';
 import {

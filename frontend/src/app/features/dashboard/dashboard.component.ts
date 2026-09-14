@@ -6,12 +6,13 @@ import { ActivityLogComponent } from '../supervisor/activity-log/activity-log.co
 import { SidebarComponent } from '../../shared/ui/sidebar/sidebar.component';
 import { CalendarComponent } from '../../shared/ui/calendar/calendar.component';
 import { UpcomingExamComponent } from '../../shared/ui/upcoming-exam/upcoming-exam.component';
-import { Exam } from '../../core/services/exam.service';
+import { Exam } from '../../core/models/app.models';
 import * as ExamActions from '../../state/exams/exam.actions';
 import { selectAllExamsSorted } from '../../state/exams/exam.selectors';
 import { ExamsState } from '../../state/exams/exam.reducer';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Store } from '@ngrx/store';
+import { UsersService } from '../../core/services/users.service';
 
 interface AppState {
     exams: ExamsState;
@@ -39,9 +40,11 @@ export class DashboardComponent implements OnInit {
         role: string;
     } | null = null;
     exams$: Observable<Exam[]>;
+    hasPendingUsers$!: Observable<boolean>;
 
     constructor(
         private authService: AuthService,
+        private usersService: UsersService,
         private router: Router,
         private store: Store<AppState>,
     ) {
@@ -57,5 +60,8 @@ export class DashboardComponent implements OnInit {
         this.user = u;
 
         this.store.dispatch(ExamActions.loadExams());
+        this.hasPendingUsers$ = this.usersService.getAll().pipe(
+            map((users) => users.some((u) => u.status === 'pending'))
+        );
     }
 }

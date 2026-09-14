@@ -1,86 +1,94 @@
 <div class="login-wrapper">
-  <div *ngIf="!submitted" class="login-card">
-    <div class="login-card__header">
-      <h2 class="login-card__title">Create an Account</h2>
-    </div>
-
-    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="login-card__form">
-      <div class="form-row">
-        <div class="form-group">
-          <label for="firstName" class="form-label">First Name</label>
-          <input
-            id="firstName"
-            formControlName="firstName"
-            placeholder="John"
-            class="form-input"
-          />
+    <div *ngIf="!submitted" class="login-card">
+        <div class="login-card__header">
+            <h2 class="login-card__title">Create an Account</h2>
         </div>
 
-        <div class="form-group">
-          <label for="lastName" class="form-label">Last Name</label>
-          <input
-            id="lastName"
-            formControlName="lastName"
-            placeholder="Doe"
-            class="form-input"
-          />
+        <form
+            [formGroup]="form"
+            (ngSubmit)="onSubmit()"
+            class="login-card__form"
+        >
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <input
+                        id="firstName"
+                        formControlName="firstName"
+                        placeholder="John"
+                        class="form-input"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <input
+                        id="lastName"
+                        formControlName="lastName"
+                        placeholder="Doe"
+                        class="form-input"
+                    />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <input
+                    id="email"
+                    type="email"
+                    formControlName="email"
+                    placeholder="name@email.com"
+                    class="form-input"
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input
+                    id="password"
+                    type="password"
+                    formControlName="password"
+                    placeholder="••••••••"
+                    class="form-input"
+                />
+            </div>
+
+            <div *ngIf="errorMessage" class="login-card__error">
+                {{ errorMessage }}
+            </div>
+
+            <button
+                type="submit"
+                [disabled]="form.invalid"
+                class="login-card__button"
+            >
+                <span>Register</span>
+            </button>
+        </form>
+
+        <div class="login-card__footer">
+            <span>Already have an account?</span>
+            <a routerLink="/login" class="login-card__link">Login</a>
         </div>
-      </div>
-
-      <div class="form-group">
-        <label for="email" class="form-label">Email</label>
-        <input
-          id="email"
-          type="email"
-          formControlName="email"
-          placeholder="name@email.com"
-          class="form-input"
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="password" class="form-label">Password</label>
-        <input
-          id="password"
-          type="password"
-          formControlName="password"
-          placeholder="••••••••"
-          class="form-input"
-        />
-      </div>
-
-      <div *ngIf="errorMessage" class="login-card__error">
-        {{ errorMessage }}
-      </div>
-
-      <button
-        type="submit"
-        [disabled]="form.invalid"
-        class="login-card__button"
-      >
-        <span>Register</span>
-      </button>
-    </form>
-
-    <div class="login-card__footer">
-      <span>Already have an account?</span>
-      <a routerLink="/login" class="login-card__link">Login</a>
-    </div>
-  </div>
-
-  <div *ngIf="submitted" class="login-card login-card--submitted">
-    <div class="login-card__header">
-      <h2 class="login-card__title">Registration Submitted</h2>
     </div>
 
-    <p class="login-card__message">
-      Your account is pending supervisor approval. You can log in now, but you'll see a pending screen until you're approved.
-    </p>
+    <div *ngIf="submitted" class="login-card login-card--submitted">
+        <div class="login-card__header">
+            <h2 class="login-card__title">Registration Submitted</h2>
+        </div>
 
-    <div class="login-card__footer">
-      <a routerLink="/login" class="login-card__button login-card__button--link">
-        Go to Login
-      </a>
+        <p class="login-card__message">
+            Your account is pending supervisor approval. You can log in now, but
+            you'll see a pending screen until you're approved.
+        </p>
+
+        <div class="login-card__footer">
+            <a
+                routerLink="/login"
+                class="login-card__button login-card__button--link"
+            >
+                Go to Login
+            </a>
+        </div>
     </div>
-  </div>
 </div>
