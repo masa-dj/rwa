@@ -104,7 +104,7 @@ export class VesselCauterizationComponent
             .pipe(takeUntil(this.destroy$))
             .subscribe(() => this.spawnTarget());
 
-        //drives movement and holding checks in lockstep
+        //drives movement and holding checks
         const pulse$ = interval(TICK_MS).pipe(
             share(),
             takeUntil(this.destroy$)
@@ -130,7 +130,7 @@ export class VesselCauterizationComponent
             fromEvent(window, 'blur')
         );
 
-        this.setupTremorResponse(el)
+        this.setupTremorResponse(el);
 
         pointerDown$
             .pipe(
@@ -263,36 +263,51 @@ export class VesselCauterizationComponent
 
     private setupTremorResponse(el: HTMLDivElement) {
         this.tremorTriggered$.pipe(takeUntil(this.destroy$)).subscribe(() => {
-          if (!this.activeTargetId) return; // not mid-hold, nothing to test
+            if (!this.activeTargetId) return;
 
-          const start = Date.now();
-          race(
-            fromEvent(el, 'pointerup').pipe(map(() => true)),
-            timer(TREMOR_RESPONSE_WINDOW_MS).pipe(map(() => false)),
-          ).pipe(take(1), takeUntil(this.destroy$))
-            .subscribe((released) => {
-              this.tremorResponses.push({ compliant: released, delayMs: Date.now() - start });
-              if (!released) this.resetHold(); // force-fail: they kept dragging through the disturbance
-            });
+            const start = Date.now();
+            race(
+                fromEvent(el, 'pointerup').pipe(map(() => true)),
+                timer(TREMOR_RESPONSE_WINDOW_MS).pipe(map(() => false))
+            )
+                .pipe(take(1), takeUntil(this.destroy$))
+                .subscribe((released) => {
+                    this.tremorResponses.push({
+                        compliant: released,
+                        delayMs: Date.now() - start,
+                    });
+                    if (!released) this.resetHold(); //force-fail
+                });
         });
-      }
+    }
 
-      private computeTremorIndex(): number {
-        if (this.tremorResponses.length === 0) return 100; // never disturbed — no penalty
+    private computeTremorIndex(): number {
+        if (this.tremorResponses.length === 0) return 100;
         const scores = this.tremorResponses.map((r) =>
-          r.compliant ? Math.max(0, Math.round(100 - (r.delayMs / TREMOR_RESPONSE_WINDOW_MS) * 100)) : 0,
+            r.compliant
+                ? Math.max(
+                      0,
+                      Math.round(
+                          100 - (r.delayMs / TREMOR_RESPONSE_WINDOW_MS) * 100
+                      )
+                  )
+                : 0
         );
         return Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
-      }
+    }
 
-      private end() {
+    private end() {
         if (this.ended) return;
         this.ended = true;
         this.missedCount = this.targets.length;
-        this.finished.emit({ sealed: this.sealedCount, missed: this.missedCount, tremorIndex: this.computeTremorIndex() });
+        this.finished.emit({
+            sealed: this.sealedCount,
+            missed: this.missedCount,
+            tremorIndex: this.computeTremorIndex(),
+        });
         this.destroy$.next();
         this.destroy$.complete();
-      }
+    }
 
     formatTime(ms: number): string {
         const seconds = Math.ceil(ms / 1000);

@@ -173,7 +173,7 @@ export class TimedSutureComponent implements OnInit, AfterViewInit, OnDestroy {
 
         const interruption$ = merge(release$, keyUp$);
 
-        this.activateStitch(0, pulse$, interruption$);
+        this.activateStitch(0);
 
         pointerDown$
             .pipe(
@@ -282,8 +282,6 @@ export class TimedSutureComponent implements OnInit, AfterViewInit, OnDestroy {
 
     private activateStitch(
         index: number,
-        pulse$: ReturnType<typeof interval>,
-        interruption$: any
     ) {
         if (index >= this.stitches.length) {
             this.end();
@@ -302,7 +300,7 @@ export class TimedSutureComponent implements OnInit, AfterViewInit, OnDestroy {
                     this.surgicalEvent.emit({
                         type: 'stitch_missed',
                         payload: { key: this.stitches[index].targetKey },
-                    }); // 👈 add
+                    });
                     this.advance();
                 }
             });
