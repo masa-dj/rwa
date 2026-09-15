@@ -8,12 +8,12 @@ import { CreateSurgicalEventDto } from "./dto/create-surgical-event.dto";
 export class SurgicalEventService {
     constructor(
         @InjectRepository(SurgicalEvent)
-        private surgicalEventRepository: Repository<SurgicalEvent>
+        private surgicalEventRepository: Repository<SurgicalEvent>,
     ) {}
 
     async create(
         dto: CreateSurgicalEventDto,
-        triggeredBy: string | null
+        triggeredBy: string | null,
     ): Promise<SurgicalEvent> {
         const event = this.surgicalEventRepository.create({
             sessionId: dto.sessionId,
@@ -35,17 +35,24 @@ export class SurgicalEventService {
     }
 
     async countByType(sessionId: string, type: string): Promise<number> {
-        return this.surgicalEventRepository.count({ where: { sessionId, type } });
+        return this.surgicalEventRepository.count({
+            where: { sessionId, type },
+        });
     }
 
     async getFreezeReactionTime(sessionId: string): Promise<number | null> {
         const events = await this.surgicalEventRepository.find({
             where: { sessionId },
-            order: { timestamp: 'ASC' },
+            order: { timestamp: "ASC" },
         });
-        const triggered = events.find((e) => e.type === 'freeze_triggered');
-        const acknowledged = events.find((e) => e.type === 'freeze_acknowledged');
+        const triggered = events.find((e) => e.type === "freeze_triggered");
+        const acknowledged = events.find(
+            (e) => e.type === "freeze_acknowledged",
+        );
         if (!triggered || !acknowledged) return null;
-        return new Date(acknowledged.timestamp).getTime() - new Date(triggered.timestamp).getTime();
+        return (
+            new Date(acknowledged.timestamp).getTime() -
+            new Date(triggered.timestamp).getTime()
+        );
     }
 }

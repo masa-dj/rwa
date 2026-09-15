@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { ReportService, Report } from '../../core/services/report.service';
+import { ReportService } from '../../core/services/report.service';
+import { Report } from '../../core/models/app.models';
 import { SidebarComponent } from '../../shared/ui/sidebar/sidebar.component';
 
 @Component({

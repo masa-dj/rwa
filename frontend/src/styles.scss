@@ -7,11 +7,16 @@
     --color-slate: #6b7280;
     --color-border: #e2ddd3;
     --color-accent: #37aebe;
+    --color-accent-light: #9adced;
     --color-text: #1f2328;
     --color-text-inverse: #faf9f6;
 
     --color-green: #b6d094;
     --color-red: #e87461;
+    --color-ghost: rgba(248, 246, 242, 0.75);
+
+    --color-border-danger: #b3462c;
+    --color-danger:#fbeae4;
 
     --font-display: "Montserrat", sans-serif;
     --font-body: "Montserrat", sans-serif;
@@ -38,26 +43,32 @@ body {
     flex: 1;
     padding: 48px 56px;
     max-width: 1000px;
+    @media (max-width: 1024px) {
+        padding: 24px 20px;
+    }
+
+    @media (max-width: 640px) {
+        padding: 72px 24px;
+    }
 }
 
 .layout__header {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     margin-bottom: 32px;
 }
 
 .layout__title {
-    font-size: 32px;
+    font-size: clamp(20px, 4vw, 28px);
     font-weight: 600;
     color: var(--color-text);
     margin: 0;
 }
 
 .layout__subtitle {
-    font-size: 14px;
+    font-size: clamp(12px, 2.5vw, 14px);
     color: var(--color-slate);
-    letter-spacing: 0.05em;
     margin: 4px 0 0;
 }
 
@@ -73,7 +84,6 @@ body {
 .status-badge {
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.03em;
     padding: 3px 8px;
     border-radius: var(--radius-sm);
     font-weight: bold;

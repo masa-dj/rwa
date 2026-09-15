@@ -35,7 +35,7 @@ export class SurgicalEvent {
     @Column({ type: "jsonb", nullable: true })
     payload!: Record<string, any> | null;
 
-    @Column({ type: 'varchar', nullable: true })
+    @Column({ type: "varchar", nullable: true })
     triggeredBy!: string | null;
 
     @CreateDateColumn()

@@ -1,44 +1,74 @@
 <div class="layout">
-  <app-sidebar></app-sidebar>
+    <app-sidebar></app-sidebar>
 
-  <main class="layout__content">
-    <h1 class="layout__title">Schedule Exam</h1>
-    <p class="layout__subtitle">Assign a timed exercise to a student</p>
+    <main class="layout__content">
+        <div class="layout__header">
+            <div>
+                <h1 class="layout__title">Schedule Exam</h1>
+                <p class="layout__subtitle">
+                    Assign a timed exercise to a student
+                </p>
+            </div>
+        </div>
+        <div class="form-card" *ngIf="!submitted">
+            <form [formGroup]="form" (ngSubmit)="onSubmit()">
+                <label class="field">
+                    <span class="field__label">Student</span>
+                    <select formControlName="studentId" class="field__input">
+                        <option value="" disabled selected>
+                            Select a student
+                        </option>
+                        <option
+                            *ngFor="let s of students$ | async"
+                            [value]="s.id"
+                        >
+                            {{ s.name }}
+                        </option>
+                    </select>
+                </label>
 
-    <div class="form-card" *ngIf="!submitted">
-      <form [formGroup]="form" (ngSubmit)="onSubmit()">
-        <label class="field">
-          <span class="field__label">Student</span>
-          <select formControlName="studentId" class="field__input">
-            <option value="" disabled selected>Select a student</option>
-            <option *ngFor="let s of students$ | async" [value]="s.id">{{ s.name }}</option>
-          </select>
-        </label>
+                <label class="field">
+                    <span class="field__label">Exercise</span>
+                    <select formControlName="exerciseType" class="field__input">
+                        <option value="" disabled selected>
+                            Select an exercise
+                        </option>
+                        <option
+                            *ngFor="let e of exerciseTypes"
+                            [value]="e.value"
+                        >
+                            {{ e.label }}
+                        </option>
+                    </select>
+                </label>
 
-        <label class="field">
-          <span class="field__label">Exercise</span>
-          <select formControlName="exerciseType" class="field__input">
-            <option value="" disabled selected>Select an exercise</option>
-            <option *ngFor="let e of exerciseTypes" [value]="e.value">{{ e.label }}</option>
-          </select>
-        </label>
+                <label class="field">
+                    <span class="field__label">Date &amp; time</span>
+                    <input
+                        type="datetime-local"
+                        formControlName="scheduledAt"
+                        class="field__input"
+                        [min]="minDateTime"
+                    />
+                </label>
 
-        <label class="field">
-          <span class="field__label">Date &amp; time</span>
-          <input type="datetime-local" formControlName="scheduledAt" class="field__input" />
-        </label>
+                <app-button
+                    variant="primary"
+                    type="submit"
+                    [disabled]="form.invalid"
+                >
+                    Schedule Exam
+                </app-button>
+            </form>
 
-        <app-button variant="primary" type="submit" [disabled]="form.invalid">
-          Schedule Exam
-        </app-button>
-      </form>
+            <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+        </div>
 
-      <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
-    </div>
-
-    <div class="success-card" *ngIf="submitted">
-      <p>Exam scheduled.</p>
-      <app-button variant="secondary" (clicked)="backToDashboard()">Back to dashboard</app-button>
-    </div>
-  </main>
+        <div class="success-card" *ngIf="submitted">
+            <p>Exam scheduled.</p>
+            <app-button variant="secondary" (clicked)="backToDashboard()"
+                >Back to dashboard</app-button
+            >
+        </div>
+    </main>
 </div>

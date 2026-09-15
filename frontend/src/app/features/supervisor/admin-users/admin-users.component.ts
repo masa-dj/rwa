@@ -1,15 +1,25 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UsersService } from '../../../core/services/users.service';
-import { AppUser } from '../../../core/services/auth.service';
+import { AppUser } from '../../../core/models/app.models';
 import { SidebarComponent } from '../../../shared/ui/sidebar/sidebar.component';
 import { ButtonComponent } from '../../../shared/ui/button/button.component';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+    FormBuilder,
+    FormGroup,
+    ReactiveFormsModule,
+    Validators,
+} from '@angular/forms';
 
 @Component({
     selector: 'app-admin-users',
     standalone: true,
-    imports: [CommonModule, SidebarComponent, ButtonComponent, ReactiveFormsModule],
+    imports: [
+        CommonModule,
+        SidebarComponent,
+        ButtonComponent,
+        ReactiveFormsModule,
+    ],
     templateUrl: './admin-users.component.html',
     styleUrls: ['./admin-users.component.scss'],
 })
@@ -21,7 +31,7 @@ export class AdminUsersComponent implements OnInit {
     editingUser: AppUser | null = null;
     editForm: FormGroup;
 
-    constructor(private usersService: UsersService, private fb: FormBuilder,) {
+    constructor(private usersService: UsersService, private fb: FormBuilder) {
         this.editForm = this.fb.group({
             firstName: ['', Validators.required],
             lastName: ['', Validators.required],
@@ -73,7 +83,7 @@ export class AdminUsersComponent implements OnInit {
         const clickedInsideTrigger = target.closest('.menu__trigger');
 
         if (!clickedInsideDropdown && !clickedInsideTrigger) {
-        this.openMenuId = null;
+            this.openMenuId = null;
         }
     }
 
@@ -91,10 +101,12 @@ export class AdminUsersComponent implements OnInit {
 
     saveEdit() {
         if (!this.editingUser || this.editForm.invalid) return;
-        this.usersService.update(this.editingUser.id, this.editForm.getRawValue()).subscribe(() => {
-        this.editingUser = null;
-        this.load();
-        });
+        this.usersService
+            .update(this.editingUser.id, this.editForm.getRawValue())
+            .subscribe(() => {
+                this.editingUser = null;
+                this.load();
+            });
     }
 
     cancelEdit() {
@@ -105,5 +117,4 @@ export class AdminUsersComponent implements OnInit {
         if (!confirm('Delete this user? This cannot be undone.')) return;
         this.usersService.delete(id).subscribe(() => this.load());
     }
-
 }

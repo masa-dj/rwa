@@ -33,7 +33,7 @@
                         </td>
                         <td class="actions-cell">
                             <ng-container *ngIf="u.status === 'pending'">
-                                <app-button variant="ghost" (clicked)="approve(u.id)">Approve</app-button>
+                                <app-button (clicked)="approve(u.id)">Approve</app-button>
                                 <app-button variant="danger" (clicked)="reject(u.id)">Reject</app-button>
                             </ng-container>
 

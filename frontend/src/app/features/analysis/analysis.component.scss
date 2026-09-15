@@ -12,15 +12,12 @@
 }
 .stat-card__label {
     display: block;
-    font-family: var(--font-mono);
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
     color: var(--color-slate);
     margin-bottom: 4px;
 }
 .stat-card__value {
-    font-family: var(--font-display);
     font-size: 28px;
     font-weight: 600;
     color: var(--color-text);
@@ -38,7 +35,6 @@
     display: block;
     font-size: 11px;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
     color: var(--color-slate);
 }
 .chart-svg {
@@ -58,13 +54,10 @@
 .breakdown-table {
     width: 100%;
     border-collapse: collapse;
-    font-family: var(--font-body);
     th {
         text-align: left;
-        font-family: var(--font-mono);
         font-size: 11px;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
         color: var(--color-slate);
         padding: 12px 8px;
         border-bottom: 1px solid var(--color-border);

@@ -11,6 +11,10 @@
 
         <section class="practice-section">
             <span class="section-label">Start a Practice</span>
+            <p class="screen-warning" *ngIf="!isScreenSupported">
+                Your screen width must be greater than 1100px to start a
+                practice session.
+            </p>
             <div class="start-card">
                 <select
                     [(ngModel)]="selectedExercise"
@@ -20,7 +24,10 @@
                         {{ e.label }}
                     </option>
                 </select>
-                <app-button variant="primary" (clicked)="start()"
+                <app-button
+                    variant="primary"
+                    [disabled]="!isScreenSupported"
+                    (clicked)="start()"
                     >Start Practice</app-button
                 >
             </div>

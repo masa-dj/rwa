@@ -1,12 +1,22 @@
 .layout__grid {
     display: flex;
     align-items: flex-start;
-    gap: 100px
+    gap: 40px;
+    @media (max-width: 1024px) {
+        gap: 24px;
+    }
+
+    @media (max-width: 868px) {
+        flex-direction: column;
+        align-items: stretch;
+    }
 }
 
 .layout__main {
     min-width: 0;
-
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
 }
 
 .layout__aside {
@@ -14,5 +24,10 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    width: 240px;
+    width: 360px;
+}
+
+.upcoming-exam__label {
+    font-size: clamp(12px, 2vw, 14px);
+    font-weight: 600;
 }

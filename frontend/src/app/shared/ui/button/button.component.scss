@@ -1,54 +1,73 @@
 .btn {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: 14px;
-  letter-spacing: 0.01em;
-  padding: 10px 20px;
-  border-radius: var(--radius-sm);
-  border: 1px solid transparent;
-  cursor: pointer;
-  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 7px 20px;
+    border-radius: var(--radius-sm);
+    border: 1px solid transparent;
+    cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease,
+        border-color 0.15s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 
-  &:active:not(:disabled) { transform: scale(0.97); }
-  &:disabled { opacity: 0.5; cursor: not-allowed; }
-  &:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+    &:active:not(:disabled) {
+        transform: scale(0.97);
+    }
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+    }
 }
 
 .btn--primary {
-  background: var(--color-accent);
-  color: var(--color-ink);
-  border-color: var(--color-accent);
-  &:hover:not(:disabled) { background: #c67f34; }
+    background: var(--color-accent);
+    color: var(--color-ink);
+    border-color: var(--color-accent);
+    &:hover:not(:disabled) {
+        background: var(--color-accent-light);
+    }
 }
 
 .btn--secondary {
-  background: transparent;
-  color: var(--color-ink);
-  border-color: var(--color-border);
-  &:hover:not(:disabled) { background: var(--color-paper-alt); }
+    background: transparent;
+    color: var(--color-ink);
+    border-color: var(--color-border);
+    &:hover:not(:disabled) {
+        background: var(--color-paper-alt);
+    }
 }
 
 .btn--ghost {
-  background: transparent;
-  color: var(--color-slate);
-  border-color: transparent;
-  &:hover:not(:disabled) { background: var(--color-paper-alt); color: var(--color-ink); }
+    background: transparent;
+    color: var(--color-slate);
+    border-color: transparent;
+    &:hover:not(:disabled) {
+        background: var(--color-paper-alt);
+        color: var(--color-ink);
+    }
 }
 
 .btn--ghost-inverse {
-  background: transparent;
-  color: rgba(248, 246, 242, 0.75);
-  border-color: transparent;
-  &:hover:not(:disabled) { background: rgba(248, 246, 242, 0.08); color: var(--color-text-inverse); }
+    background: transparent;
+    color: var(--color-ghost);
+    border-color: transparent;
+    &:hover:not(:disabled) {
+        background: rgba(248, 246, 242, 0.08);
+        color: var(--color-text-inverse);
+    }
 }
 
 .btn--danger {
-  background: transparent;
-  color: #B3462C;
-  border-color: #E8C2B4;
-  &:hover:not(:disabled) { background: #FBEAE4; }
+    background: transparent;
+    color:var(--color-border-danger);
+    border-color: #e8c2b4;
+    &:hover:not(:disabled) {
+        background: var(--color-danger);
+    }
 }

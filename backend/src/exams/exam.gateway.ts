@@ -1,9 +1,9 @@
 import {
-  WebSocketGateway,
-  WebSocketServer,
-  SubscribeMessage,
-  MessageBody,
-  ConnectedSocket,
+    WebSocketGateway,
+    WebSocketServer,
+    SubscribeMessage,
+    MessageBody,
+    ConnectedSocket,
 } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { JwtService } from "@nestjs/jwt";
@@ -21,13 +21,13 @@ export class ExamGateway {
         private jwtService: JwtService,
         private examRoomService: ExamRoomService,
         private examService: ExamService,
-        private surgicalEventService: SurgicalEventService
+        private surgicalEventService: SurgicalEventService,
     ) {}
 
     private authenticate(client: Socket) {
         const token =
-        (client.handshake.auth?.token as string) ||
-        client.handshake.headers.authorization?.split(" ")[1];
+            (client.handshake.auth?.token as string) ||
+            client.handshake.headers.authorization?.split(" ")[1];
         if (!token) throw new Error("No token");
         return this.jwtService.verify(token);
     }
@@ -35,7 +35,7 @@ export class ExamGateway {
     @SubscribeMessage("exam:join-room")
     async handleJoinRoom(
         @ConnectedSocket() client: Socket,
-        @MessageBody() data: { examId: string }
+        @MessageBody() data: { examId: string },
     ) {
         try {
             const payload = this.authenticate(client);
@@ -43,7 +43,9 @@ export class ExamGateway {
             const isStudent = exam.studentId === payload.sub;
             const isSupervisor = exam.supervisorId === payload.sub;
             if (!isStudent && !isSupervisor) {
-                client.emit("exam:error", { message: "Not authorized for this exam" });
+                client.emit("exam:error", {
+                    message: "Not authorized for this exam",
+                });
                 return;
             }
             client.data.userId = payload.sub;
@@ -52,7 +54,9 @@ export class ExamGateway {
             client.join(`exam:${data.examId}`);
 
             const state = this.examRoomService.getState(data.examId);
-            this.server.to(`exam:${data.examId}`).emit("exam:room-state", state);
+            this.server
+                .to(`exam:${data.examId}`)
+                .emit("exam:room-state", state);
         } catch {
             client.emit("exam:error", { message: "Authentication failed" });
             client.disconnect();
@@ -67,15 +71,18 @@ export class ExamGateway {
         this.server.to(`exam:${examId}`).emit("exam:room-state", state);
 
         if (this.examRoomService.bothReady(examId)) {
-        try {
-            const exam = await this.examService.findById(examId);
-            const started = await this.examService.start(examId, exam.studentId);
-            this.server.to(`exam:${examId}`).emit("exam:started", started);
-        } catch (err: any) {
-            this.server
-            .to(`exam:${examId}`)
-            .emit("exam:error", { message: err.message });
-        }
+            try {
+                const exam = await this.examService.findById(examId);
+                const started = await this.examService.start(
+                    examId,
+                    exam.studentId,
+                );
+                this.server.to(`exam:${examId}`).emit("exam:started", started);
+            } catch (err: any) {
+                this.server
+                    .to(`exam:${examId}`)
+                    .emit("exam:error", { message: err.message });
+            }
         }
     }
 
@@ -101,7 +108,7 @@ export class ExamGateway {
             tremorIndex: number;
             score: number;
             reactionTime?: number;
-        }
+        },
     ) {
         const { examId, role } = client.data;
         if (role !== "student") return;
@@ -115,7 +122,10 @@ export class ExamGateway {
     }
 
     @SubscribeMessage("exam:telemetry")
-    handleTelemetry(@ConnectedSocket() client: Socket, @MessageBody() data: any) {
+    handleTelemetry(
+        @ConnectedSocket() client: Socket,
+        @MessageBody() data: any,
+    ) {
         const { examId, role } = client.data;
         if (role !== "student" || !examId) return;
         client.to(`exam:${examId}`).emit("exam:telemetry", data);
@@ -132,7 +142,7 @@ export class ExamGateway {
             y?: number;
             deviation?: number;
             payload?: any;
-        }
+        },
     ) {
         const { examId, userId } = client.data;
         if (!examId || !data.sessionId) return;
@@ -140,78 +150,102 @@ export class ExamGateway {
         const exam = await this.examService.findById(examId);
         if (exam.sessionId !== data.sessionId) return;
 
-        await this.surgicalEventService.create({
-            sessionId: data.sessionId,
-            type: data.type,
-            x: data.x,
-            y: data.y,
-            deviation: data.deviation,
-            payload: data.payload,
-        }, userId
+        await this.surgicalEventService.create(
+            {
+                sessionId: data.sessionId,
+                type: data.type,
+                x: data.x,
+                y: data.y,
+                deviation: data.deviation,
+                payload: data.payload,
+            },
+            userId,
         );
     }
 
-    @SubscribeMessage('exam:trigger-freeze')
+    @SubscribeMessage("exam:trigger-freeze")
     async handleTriggerFreeze(@ConnectedSocket() client: Socket) {
         const { examId, role, userId } = client.data;
-        if (role !== 'supervisor' || !examId) return;
+        if (role !== "supervisor" || !examId) return;
 
         const exam = await this.examService.findById(examId);
         if (!exam.sessionId || exam.status !== ExamStatus.IN_PROGRESS) return;
 
-        if (exam.exerciseType !== 'vessel_cauterization' && exam.exerciseType !== 'steady_path') return;
+        if (
+            exam.exerciseType !== "vessel_cauterization" &&
+            exam.exerciseType !== "steady_path"
+        )
+            return;
 
-        const used = await this.surgicalEventService.countByType(exam.sessionId, 'freeze_triggered');
+        const used = await this.surgicalEventService.countByType(
+            exam.sessionId,
+            "freeze_triggered",
+        );
         if (used >= 1) {
-            client.emit('exam:error', { message: 'Freeze already used' });
+            client.emit("exam:error", { message: "Freeze already used" });
             return;
         }
 
         await this.surgicalEventService.create(
-            { sessionId: exam.sessionId, type: 'freeze_triggered', payload: {} },
+            {
+                sessionId: exam.sessionId,
+                type: "freeze_triggered",
+                payload: {},
+            },
             userId,
         );
 
-        this.server.to(`exam:${examId}`).emit('exam:freeze');
+        this.server.to(`exam:${examId}`).emit("exam:freeze");
     }
 
-    @SubscribeMessage('exam:freeze-acknowledged')
+    @SubscribeMessage("exam:freeze-acknowledged")
     async handleFreezeAcknowledged(@ConnectedSocket() client: Socket) {
         const { examId, role, userId } = client.data;
-        if (role !== 'student' || !examId) return;
+        if (role !== "student" || !examId) return;
 
         const exam = await this.examService.findById(examId);
         if (!exam.sessionId) return;
 
         await this.surgicalEventService.create(
-            { sessionId: exam.sessionId, type: 'freeze_acknowledged' },
+            { sessionId: exam.sessionId, type: "freeze_acknowledged" },
             userId,
         );
 
-        this.server.to(`exam:${examId}`).emit('exam:unfreeze');
+        this.server.to(`exam:${examId}`).emit("exam:unfreeze");
     }
 
-    @SubscribeMessage('exam:trigger-tremor')
+    @SubscribeMessage("exam:trigger-tremor")
     async handleTriggerTremor(@ConnectedSocket() client: Socket) {
         const { examId, role, userId } = client.data;
-        if (role !== 'supervisor' || !examId) return;
+        if (role !== "supervisor" || !examId) return;
 
         const exam = await this.examService.findById(examId);
         if (!exam.sessionId || exam.status !== ExamStatus.IN_PROGRESS) return;
 
-        if (exam.exerciseType !== 'vessel_cauterization' && exam.exerciseType !== 'timed_suture') return;
+        if (
+            exam.exerciseType !== "vessel_cauterization" &&
+            exam.exerciseType !== "timed_suture"
+        )
+            return;
 
-        const used = await this.surgicalEventService.countByType(exam.sessionId, 'tremor_triggered');
+        const used = await this.surgicalEventService.countByType(
+            exam.sessionId,
+            "tremor_triggered",
+        );
         if (used >= 1) {
-            client.emit('exam:error', { message: 'Tremor already used' });
+            client.emit("exam:error", { message: "Tremor already used" });
             return;
         }
 
         await this.surgicalEventService.create(
-            { sessionId: exam.sessionId, type: 'tremor_triggered', payload: {} },
+            {
+                sessionId: exam.sessionId,
+                type: "tremor_triggered",
+                payload: {},
+            },
             userId,
         );
 
-        this.server.to(`exam:${examId}`).emit('exam:tremor');
+        this.server.to(`exam:${examId}`).emit("exam:tremor");
     }
 }

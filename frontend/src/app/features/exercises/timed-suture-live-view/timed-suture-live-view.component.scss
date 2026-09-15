@@ -2,7 +2,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-family: var(--font-mono);
     font-size: 13px;
     color: var(--color-slate);
     margin-bottom: 12px;
@@ -18,9 +17,8 @@
     border-radius: var(--radius-sm);
     background: var(--color-paper-alt);
     color: var(--color-slate);
-    letter-spacing: 0.05em;
     &.is-held {
-        background: var(--color-moss-soft);
+        background: var(--color-green);
         color: #2b6b46;
     }
 }
@@ -69,7 +67,7 @@
     }
 }
 .cursor-dot {
-    fill: var(--color-moss);
+    fill: var(--color-green);
     stroke: var(--color-text-inverse);
     stroke-width: 2;
     transition: fill 0.1s ease;

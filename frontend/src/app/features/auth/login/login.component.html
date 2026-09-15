@@ -1,53 +1,53 @@
 <div class="login-wrapper">
-  <div class="login-card">
-    <div class="login-card__header">
-      <h2 class="login-card__title">Login</h2>
+    <div class="login-card">
+        <div class="login-card__header">
+            <h2 class="login-card__title">Login</h2>
+        </div>
+
+        <form (ngSubmit)="onSubmit()" class="login-card__form">
+            <div class="form-group">
+                <label for="email" class="form-label">Email</label>
+                <input
+                    id="email"
+                    type="email"
+                    placeholder="name@email.com"
+                    [(ngModel)]="email"
+                    name="email"
+                    class="form-input"
+                    required
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input
+                    id="password"
+                    type="password"
+                    placeholder="••••••••"
+                    [(ngModel)]="password"
+                    name="password"
+                    class="form-input"
+                    required
+                />
+            </div>
+
+            <div *ngIf="error" class="login-card__error">
+                {{ error }}
+            </div>
+
+            <button
+                type="submit"
+                [disabled]="loading"
+                class="login-card__button"
+            >
+                <span *ngIf="!loading">Sign In</span>
+                <span *ngIf="loading">Signing in...</span>
+            </button>
+        </form>
+
+        <div class="login-card__footer">
+            <span>Don't have an account?</span>
+            <a routerLink="/register" class="login-card__link">Register</a>
+        </div>
     </div>
-
-    <form (ngSubmit)="onSubmit()" class="login-card__form">
-      <div class="form-group">
-        <label for="email" class="form-label">Email</label>
-        <input
-          id="email"
-          type="email"
-          placeholder="name@email.com"
-          [(ngModel)]="email"
-          name="email"
-          class="form-input"
-          required
-        />
-      </div>
-
-      <div class="form-group">
-        <label for="password" class="form-label">Password</label>
-        <input
-          id="password"
-          type="password"
-          placeholder="••••••••"
-          [(ngModel)]="password"
-          name="password"
-          class="form-input"
-          required
-        />
-      </div>
-
-      <div *ngIf="error" class="login-card__error">
-        {{ error }}
-      </div>
-
-      <button
-        type="submit"
-        [disabled]="loading"
-        class="login-card__button"
-      >
-        <span *ngIf="!loading">Sign In</span>
-        <span *ngIf="loading">Signing in...</span>
-      </button>
-    </form>
-
-    <div class="login-card__footer">
-      <span>Don't have an account?</span>
-      <a routerLink="/register" class="login-card__link">Register</a>
-    </div>
-  </div>
 </div>

@@ -1,31 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-
-export type SessionMode = 'practice' | 'exam';
-export type ExerciseType =
-    | 'steady_path'
-    | 'timed_suture'
-    | 'vessel_cauterization';
-export type SessionStatus = 'in_progress' | 'completed' | 'aborted';
-
-export interface Session {
-    id: string;
-    mode: SessionMode;
-    exerciseType: ExerciseType;
-    status: SessionStatus;
-    studentId: string;
-    supervisorId: string | null;
-    precisionScore: number | null;
-    tremorIndex: number | null;
-    reactionTime: number | null;
-    score: number | null;
-    startTime: string;
-    endTime: string | null;
-}
+import { ExerciseType, Session } from '../models/app.models';
+import { APP_CONFIG } from '../config/app-config';
 
 @Injectable({ providedIn: 'root' })
 export class SessionService {
-    private api = 'http://localhost:3000';
+    private api = APP_CONFIG.apiUrl;
 
     constructor(private http: HttpClient) {}
 

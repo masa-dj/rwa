@@ -1,6 +1,6 @@
 import { createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
 import { createReducer, on } from '@ngrx/store';
-import { Session } from '../../core/services/session.service';
+import { Session } from '../../core/models/app.models';
 import * as SessionActions from './session.actions';
 
 
